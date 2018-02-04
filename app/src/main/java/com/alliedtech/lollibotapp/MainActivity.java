@@ -61,13 +61,10 @@ public class MainActivity extends AppCompatActivity {
     //Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        DummyFragment df1 = new DummyFragment();
-        Bundle bd = new Bundle();
-        bd.putString("title", "Schedule");
-        df1.setArguments(bd);
-        adapter.addFrag(df1, "Schedule");
-        StatusFragment df2 = new StatusFragment();
-        adapter.addFrag(df2, "Status");
+        ScheduleFragment scheduleFragment = new ScheduleFragment();
+        adapter.addFrag(scheduleFragment, "Schedule");
+        StatusFragment statusFragment = new StatusFragment();
+        adapter.addFrag(statusFragment, "Status");
         viewPager.setAdapter(adapter);
     }
 
