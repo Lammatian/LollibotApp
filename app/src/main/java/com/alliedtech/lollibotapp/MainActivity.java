@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
         bd.putString("title", "Schedule");
         df1.setArguments(bd);
         adapter.addFrag(df1, "Schedule");
-        DummyFragment df2 = new DummyFragment();
-        bd.putString("title", "Status");
-        df2.setArguments(bd);
+        StatusFragment df2 = new StatusFragment();
         adapter.addFrag(df2, "Status");
         viewPager.setAdapter(adapter);
     }
