@@ -2,7 +2,6 @@ package com.alliedtech.lollibotapp;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -13,12 +12,12 @@ public class DaySchedule {
     private ArrayList<DatePair> times;
     private final DateFormat datetimeToDate = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
-    public DaySchedule(Date date, ArrayList<DatePair> times) {
+    DaySchedule(Date date, ArrayList<DatePair> times) {
         this.date = date;
         this.times = times;
     }
 
-    public DaySchedule(Date date) {
+    DaySchedule(Date date) {
         this.date = date;
         this.times = new ArrayList<>();
     }
@@ -32,10 +31,10 @@ public class DaySchedule {
     }
 
     static class DatePair {
-        public final Date start;
-        public final Date end;
+        final Date start;
+        final Date end;
 
-        public DatePair(Date start, Date end) {
+        DatePair(Date start, Date end) {
             this.start = start;
             this.end = end;
         }

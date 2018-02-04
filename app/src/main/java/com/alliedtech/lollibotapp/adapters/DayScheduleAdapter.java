@@ -2,6 +2,7 @@ package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,12 +58,15 @@ public class DayScheduleAdapter extends BaseAdapter {
         }
 
         scheduleDayViewHolder.date.setText(daySchedule.getFormattedDate());
-        scheduleDayViewHolder.scheduled_items.setText(String.format(Locale.ENGLISH,
-                "%d",
-                daySchedule.getScheduledRuns()));
+        String scheduledItemsText = mContext.getString(R.string.schedule_items_text,
+                String.format(Locale.ENGLISH,
+                        "%d",
+                        daySchedule.getScheduledRuns()));
+        scheduleDayViewHolder.scheduled_items.setText(scheduledItemsText);
 
         return view;
     }
+
 
     private static class ScheduleDayViewHolder {
         TextView date;

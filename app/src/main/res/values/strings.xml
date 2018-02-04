@@ -9,4 +9,6 @@
     <string name="current_operation_text">Current operation</string>
     <string name="current_operation_value_initial">Idle</string>
     <string name="override_button_text">Override</string>
+    <string name="schedule_today_date_text">Today (%1$s)</string>
+    <string name="schedule_items_text">Scheduled items: %1$s</string>
 </resources>
