@@ -12,10 +12,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 public class DummyFragment extends Fragment {
+
     private View view;
-
     private String title;//String for tab title
-
     private RecyclerView recyclerView;
 
     public DummyFragment() {

@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
 
@@ -40,13 +39,10 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
                 switch (tab.getPosition()) {
                     case 0:
-                        Log.e("TAG","TAB1");
+                        Log.i("tab-change", "Tab 1");
                         break;
                     case 1:
-                        Log.e("TAG","TAB2");
-                        break;
-                    case 2:
-                        Log.e("TAG","TAB3");
+                        Log.i("tab-change", "Tab 2");
                         break;
                 }
             }
@@ -67,17 +63,13 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         DummyFragment df1 = new DummyFragment();
         Bundle bd = new Bundle();
-        bd.putString("title", "ANDROID");
+        bd.putString("title", "Schedule");
         df1.setArguments(bd);
-        adapter.addFrag(df1, "ANDROID");
+        adapter.addFrag(df1, "Schedule");
         DummyFragment df2 = new DummyFragment();
-        bd.putString("title", "iOS");
+        bd.putString("title", "Status");
         df2.setArguments(bd);
-        adapter.addFrag(df2, "iOS");
-        bd.putString("title", "WINDOWS");
-        DummyFragment df3 = new DummyFragment();
-        df3.setArguments(bd);
-        adapter.addFrag(df3, "WINDOWS");
+        adapter.addFrag(df2, "Status");
         viewPager.setAdapter(adapter);
     }
 

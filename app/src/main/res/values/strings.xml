@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">LollibotApp</string>
+    <string name="battery_level_text">Battery level</string>
+    <string name="battery_level_value_initial">0\%</string>
+    <string name="estimated_lifetime_text">Estimated lifetime</string>
+    <string name="estimated_lifetime_value_initial">0h 0min</string>
+    <string name="connection_text">Connection</string>
+    <string name="connection_value_initial">Disconnected</string>
+    <string name="current_operation_text">Current operation</string>
+    <string name="current_operation_value_initial">Idle</string>
+    <string name="override_button_text">Override</string>
 </resources>
