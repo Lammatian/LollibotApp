@@ -15,9 +15,8 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class DeviceActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //Setting View Pager
+    // Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         ScheduleFragment scheduleFragment = new ScheduleFragment();
@@ -69,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //View Pager fragments setting adapter class
+    // View Pager fragments setting adapter class
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();//fragment arraylist
         private final List<String> mFragmentTitleList = new ArrayList<>();//title arraylist
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        private ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //adding fragments and title method
-        public void addFrag(Fragment fragment, String title) {
+        private void addFrag(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

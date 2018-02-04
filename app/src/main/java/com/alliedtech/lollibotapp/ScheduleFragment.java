@@ -8,9 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.alliedtech.lollibotapp.adapters.ScheduleDayAdapter;
+import com.alliedtech.lollibotapp.adapters.DayScheduleAdapter;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ScheduleFragment extends Fragment {
 
@@ -26,15 +27,20 @@ public class ScheduleFragment extends Fragment {
         return view;
 
     }
+
     //Setting recycler view
     private void setGridView() {
-
         gridView = view.findViewById(R.id.gridview);
-        ArrayList<ScheduleDay> days = new ArrayList<>();
-        days.add(new ScheduleDay());
-        days.add(new ScheduleDay());
-        days.add(new ScheduleDay());
-        ScheduleDayAdapter scheduleDayAdapter = new ScheduleDayAdapter(getActivity(), getContext(), days);
-        gridView.setAdapter(scheduleDayAdapter);
+        ArrayList<DaySchedule> days = new ArrayList<>();
+        ArrayList<DaySchedule.DatePair> times = new ArrayList<>();
+        DaySchedule.DatePair dp = new DaySchedule.DatePair(new Date(), new Date());
+        times.add(dp);
+        DaySchedule ds = new DaySchedule(new Date(), times);
+        days.add(ds);
+        days.add(new DaySchedule(new Date()));
+        days.add(new DaySchedule(new Date()));
+        DayScheduleAdapter dayScheduleAdapter = new DayScheduleAdapter(getActivity(), getContext(), days);
+        gridView.setAdapter(dayScheduleAdapter);
+        days.add(new DaySchedule(new Date()));
     }
 }

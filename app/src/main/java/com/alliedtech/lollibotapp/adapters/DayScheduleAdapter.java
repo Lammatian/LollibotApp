@@ -2,28 +2,25 @@ package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.alliedtech.lollibotapp.R;
-import com.alliedtech.lollibotapp.ScheduleDay;
+import com.alliedtech.lollibotapp.DaySchedule;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-public class ScheduleDayAdapter extends BaseAdapter {
+public class DayScheduleAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ArrayList<ScheduleDay> scheduled_days;
+    private ArrayList<DaySchedule> scheduled_days;
     private LayoutInflater inflater;
 
-    public ScheduleDayAdapter(Activity activity, Context context, ArrayList<ScheduleDay> days) {
+    public DayScheduleAdapter(Activity activity, Context context, ArrayList<DaySchedule> days) {
         mContext = context;
         scheduled_days = days;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -44,27 +41,31 @@ public class ScheduleDayAdapter extends BaseAdapter {
     // create a new view for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
+        DaySchedule daySchedule = scheduled_days.get(position);
 
         ScheduleDayViewHolder scheduleDayViewHolder;
 
         if (view == null) {
             scheduleDayViewHolder = new ScheduleDayViewHolder();
             view = inflater.inflate(R.layout.schedule_day_listitem, null);
-            TextView date = view.findViewById(R.id.schedule_day_date);
-            date.setText("Test date");
-            TextView nums = view.findViewById(R.id.schedule_day_items);
-            nums.setText("Test nums");
+            scheduleDayViewHolder.date = view.findViewById(R.id.schedule_day_date);
+            scheduleDayViewHolder.scheduled_items = view.findViewById(R.id.schedule_day_items);
             view.setTag(scheduleDayViewHolder);
         }
         else {
             scheduleDayViewHolder = (ScheduleDayViewHolder)convertView.getTag();
         }
 
+        scheduleDayViewHolder.date.setText(daySchedule.getFormattedDate());
+        scheduleDayViewHolder.scheduled_items.setText(String.format(Locale.ENGLISH,
+                "%d",
+                daySchedule.getScheduledRuns()));
+
         return view;
     }
 
     private static class ScheduleDayViewHolder {
         TextView date;
-        TextView schedule_amount;
+        TextView scheduled_items;
     }
 }
