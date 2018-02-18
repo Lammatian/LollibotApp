@@ -25,7 +25,18 @@ public class ScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.schedule_fragment, container, false);
 
+        setTodayView();
+
+        setGridView();
+        return view;
+    }
+
+    /**
+     * Set today's date and scheduled items
+     */
+    private void setTodayView() {
         DaySchedule today = new DaySchedule(new Date(), new ArrayList<DaySchedule.DatePair>());
+
         TextView todayDate = view.findViewById(R.id.todayScheduleDate);
         String todayDateText = getContext().getString(R.string.schedule_today_date_text,
                 String.format(Locale.ENGLISH,
@@ -51,14 +62,14 @@ public class ScheduleFragment extends Fragment {
         }
 
         todayItems.setText(todayItemsText);
-
-        setGridView();
-        return view;
     }
 
-    //Setting recycler view
+    /**
+     * Setting recycler view for the gridview
+     */
     private void setGridView() {
         gridView = view.findViewById(R.id.gridview);
+        // Testing below
         ArrayList<DaySchedule> days = new ArrayList<>();
         ArrayList<DaySchedule.DatePair> times = new ArrayList<>();
         DaySchedule.DatePair dp = new DaySchedule.DatePair(new Date(), new Date());
@@ -67,8 +78,9 @@ public class ScheduleFragment extends Fragment {
         days.add(ds);
         days.add(new DaySchedule(new Date()));
         days.add(new DaySchedule(new Date()));
+        days.add(new DaySchedule(new Date()));
+        days.add(new DaySchedule(new Date()));
         DayScheduleAdapter dayScheduleAdapter = new DayScheduleAdapter(getActivity(), getContext(), days);
         gridView.setAdapter(dayScheduleAdapter);
-        days.add(new DaySchedule(new Date()));
     }
 }

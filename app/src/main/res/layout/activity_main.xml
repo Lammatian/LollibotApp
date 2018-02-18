@@ -24,4 +24,14 @@
         android:layout_height="fill_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <!-- Button for adding days to the schedule -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddDay"
+        android:src="@mipmap/ic_add_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="normal"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="10dp"/>
+
 </android.support.design.widget.CoordinatorLayout>

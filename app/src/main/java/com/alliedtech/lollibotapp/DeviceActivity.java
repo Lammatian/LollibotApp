@@ -1,5 +1,6 @@
 package com.alliedtech.lollibotapp;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,8 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +24,14 @@ public class DeviceActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private FloatingActionButton fabAddDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        fabAddDay = findViewById(R.id.fabAddDay);
 
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
@@ -39,11 +47,15 @@ public class DeviceActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0:
                         Log.i("tab-change", "Tab 1");
+                        //fabAddDay.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         Log.i("tab-change", "Tab 2");
+                        //fabAddDay.setVisibility(View.INVISIBLE);
                         break;
                 }
+
+                animateFab(tab.getPosition());
             }
 
             @Override
@@ -98,5 +110,38 @@ public class DeviceActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+
+    protected void animateFab(final int tab) {
+        fabAddDay.clearAnimation();
+
+        ScaleAnimation shrink = new ScaleAnimation(0.2f + tab*0.8f,
+                1.0f - tab*0.8f,
+                0.2f + tab*0.8f,
+                1.0f - tab*0.8f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+        shrink.setDuration(100);
+        shrink.setInterpolator(new DecelerateInterpolator());
+        shrink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                fabAddDay.setVisibility(tab*4);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fabAddDay.startAnimation(shrink);
     }
 }
