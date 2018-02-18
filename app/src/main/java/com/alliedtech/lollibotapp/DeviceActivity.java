@@ -31,7 +31,7 @@ public class DeviceActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);//setting tab over viewpager
 
-        //Implementing tab selected listener over tablayout
+        //Implementing tab selected listener over tab layout
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

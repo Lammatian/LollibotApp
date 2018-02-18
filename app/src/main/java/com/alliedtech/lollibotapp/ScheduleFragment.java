@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.alliedtech.lollibotapp.adapters.DayScheduleAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class ScheduleFragment extends Fragment {
 
@@ -23,9 +25,35 @@ public class ScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.schedule_fragment, container, false);
 
+        DaySchedule today = new DaySchedule(new Date(), new ArrayList<DaySchedule.DatePair>());
+        TextView todayDate = view.findViewById(R.id.todayScheduleDate);
+        String todayDateText = getContext().getString(R.string.schedule_today_date_text,
+                String.format(Locale.ENGLISH,
+                        "%s",
+                        today.getFormattedDate()));
+
+        todayDate.setText(todayDateText);
+
+        TextView todayItems = view.findViewById(R.id.todayScheduledItems);
+        String todayItemsText;
+
+        if (today.getScheduledRuns() != 1) {
+            todayItemsText = getContext().getString(R.string.schedule_items_text_plural,
+                    String.format(Locale.ENGLISH,
+                            "%d",
+                            today.getScheduledRuns()));
+        }
+        else {
+            todayItemsText = getContext().getString(R.string.schedule_items_text_singular,
+                    String.format(Locale.ENGLISH,
+                            "%d",
+                            today.getScheduledRuns()));
+        }
+
+        todayItems.setText(todayItemsText);
+
         setGridView();
         return view;
-
     }
 
     //Setting recycler view

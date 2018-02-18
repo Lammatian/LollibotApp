@@ -58,10 +58,21 @@ public class DayScheduleAdapter extends BaseAdapter {
         }
 
         scheduleDayViewHolder.date.setText(daySchedule.getFormattedDate());
-        String scheduledItemsText = mContext.getString(R.string.schedule_items_text,
-                String.format(Locale.ENGLISH,
-                        "%d",
-                        daySchedule.getScheduledRuns()));
+        String scheduledItemsText;
+
+        if (daySchedule.getScheduledRuns() != 1) {
+            scheduledItemsText = mContext.getString(R.string.schedule_items_text_plural,
+                    String.format(Locale.ENGLISH,
+                            "%d",
+                            daySchedule.getScheduledRuns()));
+        }
+        else {
+            scheduledItemsText = mContext.getString(R.string.schedule_items_text_singular,
+                    String.format(Locale.ENGLISH,
+                            "%d",
+                            daySchedule.getScheduledRuns()));
+        }
+
         scheduleDayViewHolder.scheduled_items.setText(scheduledItemsText);
 
         return view;
