@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.alliedtech.lollibotapp.adapters.DayScheduleAdapter;
+import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,7 +80,7 @@ public class ScheduleFragment extends Fragment {
         days.add(new DaySchedule(new Date()));
         days.add(new DaySchedule(new Date()));
         days.add(new DaySchedule(new Date()));
-        DayScheduleAdapter dayScheduleAdapter = new DayScheduleAdapter(getActivity(), getContext(), days);
-        gridView.setAdapter(dayScheduleAdapter);
+        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), days);
+        gridView.setAdapter(scheduleAdapter);
     }
 }

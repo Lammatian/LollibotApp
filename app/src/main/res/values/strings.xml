@@ -12,4 +12,6 @@
     <string name="schedule_today_date_text">Today (%1$s)</string>
     <string name="schedule_items_text_plural">%1$s scheduled runs</string>
     <string name="schedule_items_text_singular">%1$s scheduled run</string>
+    <string name="run_start_text">Start</string>
+    <string name="run_end_text">End</string>
 </resources>

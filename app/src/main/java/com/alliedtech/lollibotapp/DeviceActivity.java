@@ -1,10 +1,12 @@
 package com.alliedtech.lollibotapp;
 
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,17 +26,46 @@ public class DeviceActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private AppBarLayout appBarLayout;
     private FloatingActionButton fabAddDay;
+    private boolean addingDay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        fabAddDay = findViewById(R.id.fabAddDay);
+        appBarLayout = findViewById(R.id.appBarLayout);
 
         viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
+
+        fabAddDay = findViewById(R.id.fabAddDay);
+
+        fabAddDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!addingDay) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    appBarLayout.setVisibility(View.GONE);
+                    viewPager.setVisibility(View.GONE);
+                    DayAddingFragment fragment = new DayAddingFragment();
+                    fragmentTransaction.replace(R.id.fragment_container, fragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
+                else {
+                    appBarLayout.setVisibility(View.VISIBLE);
+                    viewPager.setVisibility(View.VISIBLE);
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.popBackStack();
+                }
+
+                addingDay = !addingDay;
+            }
+        });
 
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);//setting tab over viewpager
@@ -47,11 +78,9 @@ public class DeviceActivity extends AppCompatActivity {
                 switch (tab.getPosition()) {
                     case 0:
                         Log.i("tab-change", "Tab 1");
-                        //fabAddDay.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         Log.i("tab-change", "Tab 2");
-                        //fabAddDay.setVisibility(View.INVISIBLE);
                         break;
                 }
 

@@ -15,13 +15,13 @@ import com.alliedtech.lollibotapp.DaySchedule;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class DayScheduleAdapter extends BaseAdapter {
+public class ScheduleAdapter extends BaseAdapter {
 
     private Context mContext;
     private ArrayList<DaySchedule> scheduled_days;
     private LayoutInflater inflater;
 
-    public DayScheduleAdapter(Activity activity, Context context, ArrayList<DaySchedule> days) {
+    public ScheduleAdapter(Activity activity, Context context, ArrayList<DaySchedule> days) {
         mContext = context;
         scheduled_days = days;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
