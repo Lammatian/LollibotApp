@@ -11,11 +11,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.alliedtech.lollibotapp.R;
-import com.alliedtech.lollibotapp.DaySchedule;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 public class DailyScheduleAdapter extends BaseAdapter {
 
@@ -44,7 +42,7 @@ public class DailyScheduleAdapter extends BaseAdapter {
     // create a new view for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        Pair<Date, Date> running_hours = scheduled_hours.get(position/2);
+        Pair<Date, Date> running_hours = scheduled_hours.get(position / 2);
 
         ScheduleRunViewHolder scheduleRunViewHolder;
 
@@ -61,8 +59,15 @@ public class DailyScheduleAdapter extends BaseAdapter {
 
         String start_end_text = mContext.getString(position % 2 == 0 ? R.string.run_start_text : R.string.run_end_text);
         scheduleRunViewHolder.start_end_text.setText(start_end_text);
-        String start_end_time = position % 2 == 0 ? running_hours.first.toString() : running_hours.second.toString();
-        scheduleRunViewHolder.start_end_time.setText(start_end_time);
+        Date start_end_time = position % 2 == 0 ? running_hours.first : running_hours.second;
+
+        if (start_end_time != null) {
+            scheduleRunViewHolder.start_end_time.setText(Long.toString(start_end_time.getTime()));
+            scheduleRunViewHolder.start_end_time.setVisibility(View.VISIBLE);
+        }
+        else {
+            scheduleRunViewHolder.start_end_time.setVisibility(View.GONE);
+        }
 
         return view;
     }

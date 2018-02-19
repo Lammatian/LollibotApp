@@ -2,6 +2,8 @@ package com.alliedtech.lollibotapp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ public class DayAddingFragment extends Fragment {
     private View view;
     private Button addRunButton;
     private GridView gridView;
+    private RecyclerView recyclerView;
     private ArrayList<Pair<Date, Date>> hours;
     private DailyScheduleAdapter dailyScheduleAdapter;
 
@@ -38,7 +41,7 @@ public class DayAddingFragment extends Fragment {
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hours.add(new Pair<Date, Date>(new Date(), new Date()));
+                hours.add(new Pair<Date, Date>(new Date(), null));
                 dailyScheduleAdapter.notifyDataSetChanged();
             }
         });
@@ -48,6 +51,8 @@ public class DayAddingFragment extends Fragment {
      * Setting recycler view for the gridview
      */
     private void setGridView() {
+        // TODO: Change to recyclerView with layout manager
+        // TODO: as described in https://stackoverflow.com/questions/21203951/how-to-handle-gridview-with-cell-of-different-heights
         gridView = view.findViewById(R.id.dayGridView);
         hours = new ArrayList<>();
 
