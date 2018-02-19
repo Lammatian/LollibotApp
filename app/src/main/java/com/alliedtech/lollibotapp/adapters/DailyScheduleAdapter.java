@@ -30,11 +30,11 @@ public class DailyScheduleAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return scheduled_hours.size();
+        return 2*scheduled_hours.size();
     }
 
     public Object getItem(int position) {
-        return scheduled_hours.get(position);
+        return position % 2 == 0 ? scheduled_hours.get(position/2).first : scheduled_hours.get(position/2).second;
     }
 
     public long getItemId(int position) {
