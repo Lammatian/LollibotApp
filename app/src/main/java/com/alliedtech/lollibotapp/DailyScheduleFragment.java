@@ -15,6 +15,7 @@ import com.alliedtech.lollibotapp.adapters.DailyScheduleAdapter;
 import com.alliedtech.lollibotapp.adapters.DailyScheduleRecyclerAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DailyScheduleFragment extends Fragment {
@@ -43,6 +44,8 @@ public class DailyScheduleFragment extends Fragment {
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
                 hours.add(new Run(new Date(), null));
                 dailyScheduleRecyclerAdapter.notifyDataSetChanged();
             }
@@ -59,7 +62,7 @@ public class DailyScheduleFragment extends Fragment {
 //        gridView = view.findViewById(R.id.dayGridView);
         hours = new ArrayList<>();
 
-        dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(hours, getContext());
+        dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(getActivity(), getContext(), hours);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));

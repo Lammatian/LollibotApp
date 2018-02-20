@@ -1,5 +1,6 @@
 package com.alliedtech.lollibotapp.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,29 +8,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.alliedtech.lollibotapp.DatePickerFragment;
 import com.alliedtech.lollibotapp.R;
 import com.alliedtech.lollibotapp.Run;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DailyScheduleRecyclerAdapter extends RecyclerView.Adapter<DailyScheduleRecyclerAdapter.DailyViewHolder> {
 
     private ArrayList<Run> runs;
     private Context mContext;
+    private Activity mActivity;
+    private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 
-    public class DailyViewHolder extends RecyclerView.ViewHolder {
+    class DailyViewHolder extends RecyclerView.ViewHolder {
         private TextView run_time, run_info;
 
-        public DailyViewHolder(View itemView) {
+        DailyViewHolder(View itemView) {
             super(itemView);
             this.run_time = itemView.findViewById(R.id.run_time);
             this.run_info = itemView.findViewById(R.id.run_info);
         }
     }
 
-    public DailyScheduleRecyclerAdapter(ArrayList<Run> runs, Context context) {
+    public DailyScheduleRecyclerAdapter(Activity activity, Context context, ArrayList<Run> runs) {
         this.runs = runs;
         this.mContext = context;
+        this.mActivity = activity;
     }
 
     @Override
@@ -49,16 +56,24 @@ public class DailyScheduleRecyclerAdapter extends RecyclerView.Adapter<DailySche
         if (position % 2 == 0) {
             run_info = mContext.getString(R.string.run_start_text);
             if (run.getStartDate() != null)
-                run_time = Integer.toString(run.getStartDate().getHours());
+                run_time = timeOfDay.format(run.getStartDate());
         }
         else {
             run_info = mContext.getString(R.string.run_end_text);
             if (run.getEndDate() != null)
-                run_time = Integer.toString(run.getEndDate().getHours());
+                run_time = timeOfDay.format(run.getEndDate());
         }
 
         holder.run_info.setText(run_info);
         holder.run_time.setText(run_time);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(mActivity.getFragmentManager(), "TimePicker");
+            }
+        });
     }
 
     @Override
