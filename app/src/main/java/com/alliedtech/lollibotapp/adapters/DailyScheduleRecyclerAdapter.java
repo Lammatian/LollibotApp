@@ -1,20 +1,17 @@
 package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.alliedtech.lollibotapp.TimePickerFragment;
 import com.alliedtech.lollibotapp.R;
 import com.alliedtech.lollibotapp.Run;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -27,6 +24,8 @@ public class DailyScheduleRecyclerAdapter
     private Context mContext;
     private Activity mActivity;
     private TextView viewToSet;
+    // This is so hacky and ugly
+    private DailyScheduleRecyclerAdapter fragment = this;
     private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 
     class DailyViewHolder extends RecyclerView.ViewHolder {
@@ -78,8 +77,7 @@ public class DailyScheduleRecyclerAdapter
             public void onClick(View view) {
                 viewToSet = view.findViewById(R.id.run_time);
                 TimePickerFragment timePickerFragment = new TimePickerFragment();
-                // TODO: How to set the listener properly?
-//                timePickerFragment.setTimePickedListener((TimePickerFragment.TimePickedListener) g);
+                timePickerFragment.setTimePickedListener(fragment);
                 timePickerFragment.show(mActivity.getFragmentManager(), "TimePicker");
             }
         });

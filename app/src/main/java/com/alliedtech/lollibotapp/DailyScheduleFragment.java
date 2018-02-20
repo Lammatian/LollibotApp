@@ -26,6 +26,7 @@ public class DailyScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_schedule_fragment, container, false);
+        hours = new ArrayList<>();
 
         setGridView();
         setAddRunButton();
@@ -36,6 +37,7 @@ public class DailyScheduleFragment extends Fragment {
     private void setAddRunButton() {
         addRunButton = view.findViewById(R.id.addRunButton);
 
+        // TODO: array hours gets cleared when adding new item
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +54,6 @@ public class DailyScheduleFragment extends Fragment {
      */
     private void setGridView() {
         recyclerView = view.findViewById(R.id.dayGridView);
-        hours = new ArrayList<>();
 
         dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(getActivity(), getContext(), hours);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
