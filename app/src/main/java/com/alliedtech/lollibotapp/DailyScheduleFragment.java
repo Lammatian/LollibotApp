@@ -12,22 +12,24 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.alliedtech.lollibotapp.adapters.DailyScheduleAdapter;
+import com.alliedtech.lollibotapp.adapters.DailyScheduleRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DayAddingFragment extends Fragment {
+public class DailyScheduleFragment extends Fragment {
 
     private View view;
     private Button addRunButton;
     private GridView gridView;
     private RecyclerView recyclerView;
-    private ArrayList<Pair<Date, Date>> hours;
+    private ArrayList<Run> hours;
     private DailyScheduleAdapter dailyScheduleAdapter;
+    private DailyScheduleRecyclerAdapter dailyScheduleRecyclerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.day_adding_fragment, container, false);
+        view = inflater.inflate(R.layout.daily_schedule_fragment, container, false);
 
         setGridView();
         setAddRunButton();
@@ -41,8 +43,8 @@ public class DayAddingFragment extends Fragment {
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hours.add(new Pair<Date, Date>(new Date(), null));
-                dailyScheduleAdapter.notifyDataSetChanged();
+                hours.add(new Run(new Date(), null));
+                dailyScheduleRecyclerAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -53,10 +55,16 @@ public class DayAddingFragment extends Fragment {
     private void setGridView() {
         // TODO: Change to recyclerView with layout manager
         // TODO: as described in https://stackoverflow.com/questions/21203951/how-to-handle-gridview-with-cell-of-different-heights
-        gridView = view.findViewById(R.id.dayGridView);
+        recyclerView = view.findViewById(R.id.dayGridView);
+//        gridView = view.findViewById(R.id.dayGridView);
         hours = new ArrayList<>();
 
-        dailyScheduleAdapter = new DailyScheduleAdapter(getActivity(), getContext(), hours);
-        gridView.setAdapter(dailyScheduleAdapter);
+        dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(hours, getContext());
+        recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+//        dailyScheduleAdapter = new DailyScheduleAdapter(getActivity(), getContext(), hours);
+//        gridView.setAdapter(dailyScheduleAdapter);
     }
 }

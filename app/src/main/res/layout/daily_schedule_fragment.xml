@@ -11,7 +11,7 @@
         android:text="DATE"
         android:background="@color/colorAccent"/>
 
-    <com.alliedtech.lollibotapp.WrapGridView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/dayGridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
