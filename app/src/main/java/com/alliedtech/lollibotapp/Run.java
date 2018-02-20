@@ -14,4 +14,12 @@ public class Run {
     public Date getStartDate() { return startDate; }
 
     public Date getEndDate() { return endDate; }
+
+    public void setStartDate(Date date) {
+        startDate = date;
+    }
+
+    public void setEndDate(Date date) {
+        endDate = date;
+    }
 }

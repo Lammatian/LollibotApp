@@ -20,13 +20,12 @@ public class DailyScheduleFragment extends Fragment {
     private View view;
     private Button addRunButton;
     private RecyclerView recyclerView;
-    private ArrayList<Run> hours;
+    private ArrayList<Run> runs;
     private DailyScheduleRecyclerAdapter dailyScheduleRecyclerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_schedule_fragment, container, false);
-        hours = new ArrayList<>();
 
         setGridView();
         setAddRunButton();
@@ -38,12 +37,13 @@ public class DailyScheduleFragment extends Fragment {
         addRunButton = view.findViewById(R.id.addRunButton);
 
         // TODO: array hours gets cleared when adding new item
+        // TODO: that's because we're not actually adding date to the array
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new Date());
-                hours.add(new Run(null, null));
+                runs.add(new Run(null, null));
                 dailyScheduleRecyclerAdapter.notifyDataSetChanged();
             }
         });
@@ -54,8 +54,9 @@ public class DailyScheduleFragment extends Fragment {
      */
     private void setGridView() {
         recyclerView = view.findViewById(R.id.dayGridView);
+        runs = new ArrayList<>();
 
-        dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(getActivity(), getContext(), hours);
+        dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(getActivity(), getContext(), runs);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));

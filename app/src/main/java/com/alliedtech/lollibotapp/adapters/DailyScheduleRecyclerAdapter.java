@@ -14,6 +14,7 @@ import com.alliedtech.lollibotapp.Run;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class DailyScheduleRecyclerAdapter
@@ -23,6 +24,7 @@ public class DailyScheduleRecyclerAdapter
     private ArrayList<Run> runs;
     private Context mContext;
     private Activity mActivity;
+    private int positionToSet;
     private TextView viewToSet;
     // This is so hacky and ugly
     private DailyScheduleRecyclerAdapter fragment = this;
@@ -75,6 +77,7 @@ public class DailyScheduleRecyclerAdapter
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                positionToSet = holder.getAdapterPosition();
                 viewToSet = view.findViewById(R.id.run_time);
                 TimePickerFragment timePickerFragment = new TimePickerFragment();
                 timePickerFragment.setTimePickedListener(fragment);
@@ -89,7 +92,14 @@ public class DailyScheduleRecyclerAdapter
     }
 
     @Override
-    public void onTimePicked(String time) {
-        viewToSet.setText(time);
+    public void onTimePicked(Date time) {
+        Run run = runs.get(positionToSet / 2);
+        if (positionToSet % 2 == 0)
+            run.setStartDate(time);
+        else
+            run.setEndDate(time);
+
+        runs.set(positionToSet / 2, run);
+        viewToSet.setText(timeOfDay.format(time));
     }
 }
