@@ -48,9 +48,9 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                         fragment,
-                        1970,
-                        1,
-                        1);
+                        Calendar.getInstance().get(Calendar.YEAR),
+                        Calendar.getInstance().get(Calendar.MONTH),
+                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
             }
         });
@@ -69,9 +69,6 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         });
     }
 
-    /**
-     * Setting recycler view for the gridview
-     */
     private void setGridView() {
         recyclerView = view.findViewById(R.id.dayGridView);
         runs = new ArrayList<>();

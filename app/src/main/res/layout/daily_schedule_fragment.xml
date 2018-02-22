@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DATE"
-        android:background="@color/colorAccent"/>
+        android:background="@color/accent"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dayGridView"
@@ -26,6 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ADD"
-        android:background="@color/colorAccent"/>
+        android:background="@color/accent"/>
 
 </LinearLayout>
