@@ -94,7 +94,56 @@ public class DeviceActivity extends AppCompatActivity {
         });
     }
 
+    protected void animateFab(final int tab) {
+        fabAddDay.clearAnimation();
 
+        ScaleAnimation shrink = new ScaleAnimation(0.2f + tab*0.8f,
+                1.0f - tab*0.8f,
+                0.2f + tab*0.8f,
+                1.0f - tab*0.8f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+        shrink.setDuration(100);
+        shrink.setInterpolator(new DecelerateInterpolator());
+        shrink.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                fabAddDay.setVisibility(tab*4);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        fabAddDay.startAnimation(shrink);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (addingDay) {
+            addingDay = false;
+
+            appBarLayout.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.VISIBLE);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.popBackStack();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+    //region Tabs Handling
     // Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -137,37 +186,5 @@ public class DeviceActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
-    protected void animateFab(final int tab) {
-        fabAddDay.clearAnimation();
-
-        ScaleAnimation shrink = new ScaleAnimation(0.2f + tab*0.8f,
-                1.0f - tab*0.8f,
-                0.2f + tab*0.8f,
-                1.0f - tab*0.8f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
-        shrink.setDuration(100);
-        shrink.setInterpolator(new DecelerateInterpolator());
-        shrink.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                fabAddDay.setVisibility(tab*4);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        fabAddDay.startAnimation(shrink);
-    }
+    //endregion
 }
