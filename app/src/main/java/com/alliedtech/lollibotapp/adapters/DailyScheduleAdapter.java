@@ -1,6 +1,7 @@
 package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -22,18 +24,16 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DailyScheduleAdapter
-        extends RecyclerView.Adapter<DailyScheduleAdapter.DailyViewHolder>
-        implements TimePickerFragment.TimePickedListener {
+        extends RecyclerView.Adapter<DailyScheduleAdapter.DailyViewHolder> {
 
     private ArrayList<Run> runs;
     private Context mContext;
     private Activity mActivity;
     private int positionToSet;
     private TextView viewToSet;
-    // This is so hacky and ugly but works :)
-    private DailyScheduleAdapter fragment = this;
     private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 
+    //region View holder
     class DailyViewHolder extends RecyclerView.ViewHolder {
         private TextView run_time, run_info;
 
@@ -43,7 +43,9 @@ public class DailyScheduleAdapter
             this.run_info = itemView.findViewById(R.id.run_info);
         }
     }
+    //endregion
 
+    //region Overrode adapter methods
     public DailyScheduleAdapter(Activity activity, Context context, ArrayList<Run> runs) {
         this.runs = runs;
         this.mContext = context;
@@ -83,21 +85,26 @@ public class DailyScheduleAdapter
             public void onClick(View view) {
                 positionToSet = holder.getAdapterPosition();
                 viewToSet = view.findViewById(R.id.run_time);
-//                TimePickerFragment timePickerFragment = new TimePickerFragment();
-//                timePickerFragment.setTimePickedListener(fragment);
-//                timePickerFragment.show(mActivity.getFragmentManager(), "TimePicker");
                 showTimePickerDialog();
             }
         });
     }
 
+    @Override
+    public int getItemCount() {
+        return runs.size() * 2;
+    }
+    //endregion
+
     private void showTimePickerDialog() {
+        // Make the numbers be displayed as two digit numbers (leading 0 if necessary)
         NumberPicker.Formatter timeFormatter = new NumberPicker.Formatter() {
             @Override
             public String format(int i) {
                 return String.format(Locale.ENGLISH,"%02d", i);
             }
         };
+
         final Dialog timePicker = new Dialog(mActivity);
         timePicker.setTitle("Set time");
         timePicker.setContentView(R.layout.time_picker_dialog);
@@ -137,13 +144,7 @@ public class DailyScheduleAdapter
         timePicker.show();
     }
 
-    @Override
-    public int getItemCount() {
-        return runs.size() * 2;
-    }
-
-    @Override
-    public void onTimePicked(Date time) {
+    private void onTimePicked(Date time) {
         Run run = runs.get(positionToSet / 2);
         if (positionToSet % 2 == 0)
             run.setStartDate(time);
