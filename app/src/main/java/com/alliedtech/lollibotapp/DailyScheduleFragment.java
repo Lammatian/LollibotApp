@@ -1,6 +1,8 @@
 package com.alliedtech.lollibotapp;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -61,10 +63,24 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date());
-                runs.add(new Run(null, null));
-                dailyScheduleRecyclerAdapter.notifyDataSetChanged();
+                if (addDateButton.getText() == getString(R.string.set_date)) {
+                    AlertDialog.Builder chooseDate = new AlertDialog.Builder(fragment.getContext())
+                            .setTitle("Date not chosen")
+                            .setMessage("Please choose date");
+                    chooseDate.show();
+                }
+                else if (!runs.isEmpty() && !runs.get(runs.size() - 1).isSetUp()) {
+                    AlertDialog.Builder setRun = new AlertDialog.Builder(fragment.getContext())
+                            .setTitle("Run not set")
+                            .setMessage("Please set start and end time of last run");
+                    setRun.show();
+                }
+                else {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date());
+                    runs.add(new Run(null, null));
+                    dailyScheduleRecyclerAdapter.notifyDataSetChanged();
+                }
             }
         });
     }

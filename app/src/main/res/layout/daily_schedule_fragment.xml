@@ -8,7 +8,7 @@
         android:id="@+id/addDateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DATE"
+        android:text="@string/set_date"
         android:background="@color/accent"/>
 
     <android.support.v7.widget.RecyclerView
@@ -25,7 +25,7 @@
         android:id="@+id/addRunButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADD"
+        android:text="@string/add_run"
         android:background="@color/accent"/>
 
 </LinearLayout>

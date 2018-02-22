@@ -22,4 +22,6 @@ public class Run {
     public void setEndDate(Date date) {
         endDate = date;
     }
+
+    public boolean isSetUp() { return startDate != null && endDate != null; }
 }
