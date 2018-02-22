@@ -1,9 +1,11 @@
 package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -145,18 +147,30 @@ public class DailyScheduleAdapter
     }
 
     private void onTimePicked(Date time) {
-        if (!correctRunTime(time))
-            return;
+        if (!correctRunTime(time)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
+                    .setTitle("Incorrect time")
+                    .setMessage("Runs should be in chronological order with start before end")
+                    .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
 
-        Run run = runs.get(positionToSet / 2);
+            builder.show();
+        }
+        else {
+            Run run = runs.get(positionToSet / 2);
 
-        if (positionToSet % 2 == 0)
-            run.setStartDate(time);
-        else
-            run.setEndDate(time);
+            if (positionToSet % 2 == 0)
+                run.setStartDate(time);
+            else
+                run.setEndDate(time);
 
-        runs.set(positionToSet / 2, run);
-        viewToSet.setText(timeOfDay.format(time));
+            runs.set(positionToSet / 2, run);
+            viewToSet.setText(timeOfDay.format(time));
+        }
     }
 
     //region Time checking
