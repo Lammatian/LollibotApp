@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.alliedtech.lollibotapp.adapters.DailyScheduleRecyclerAdapter;
+import com.alliedtech.lollibotapp.adapters.DailyScheduleAdapter;
 import com.alliedtech.lollibotapp.decoration.SpacesItemDecoration;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class DailyScheduleFragment extends Fragment {
     private Button addRunButton;
     private RecyclerView recyclerView;
     private ArrayList<Run> runs;
-    private DailyScheduleRecyclerAdapter dailyScheduleRecyclerAdapter;
+    private DailyScheduleAdapter dailyScheduleRecyclerAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class DailyScheduleFragment extends Fragment {
         recyclerView = view.findViewById(R.id.dayGridView);
         runs = new ArrayList<>();
 
-        dailyScheduleRecyclerAdapter = new DailyScheduleRecyclerAdapter(getActivity(), getContext(), runs);
+        dailyScheduleRecyclerAdapter = new DailyScheduleAdapter(getActivity(), getContext(), runs);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));

@@ -4,6 +4,9 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * Class for setting spacing between items in recycler view
+ */
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int space;
 
