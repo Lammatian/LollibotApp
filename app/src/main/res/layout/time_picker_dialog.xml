@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:columnCount="3">
+
+        <NumberPicker
+            android:id="@+id/hours_picker"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_column="0"
+            android:background="@color/colorPrimary"
+            android:layout_columnWeight="1"/>
+
+        <NumberPicker
+            android:id="@+id/minutes_picker"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_column="1"
+            android:background="@color/colorPrimary"
+            android:layout_columnWeight="1"/>
+
+        <NumberPicker
+            android:id="@+id/seconds_picker"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_column="2"
+            android:background="@color/colorPrimary"
+            android:layout_columnWeight="1"/>
+    </GridLayout>
+
+    <Button
+        android:id="@+id/set_time"
+        android:text="Set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

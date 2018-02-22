@@ -25,7 +25,7 @@ public class DeviceActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fabAddDay;
-    private boolean addingDay = false;
+    private boolean addingDayToSchedule = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,10 @@ public class DeviceActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         fabAddDay = findViewById(R.id.fabAddDay);
-
         fabAddDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!addingDay) {
+                if (!addingDayToSchedule) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     appBarLayout.setVisibility(View.GONE);
@@ -60,13 +59,12 @@ public class DeviceActivity extends AppCompatActivity {
                     fragmentManager.popBackStack();
                 }
 
-                addingDay = !addingDay;
+                addingDayToSchedule = !addingDayToSchedule;
             }
         });
 
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);//setting tab over viewpager
-
         //Implementing tab selected listener over tab layout
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -129,8 +127,8 @@ public class DeviceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (addingDay) {
-            addingDay = false;
+        if (addingDayToSchedule) {
+            addingDayToSchedule = false;
 
             appBarLayout.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.VISIBLE);
