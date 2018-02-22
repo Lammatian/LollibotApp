@@ -29,6 +29,7 @@ public class DailyScheduleAdapter
     private ArrayList<Run> runs;
     private Context mContext;
     private Activity mActivity;
+    private Calendar date;
     private int positionToSet;
     private TextView viewToSet;
     private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
@@ -45,11 +46,12 @@ public class DailyScheduleAdapter
     }
     //endregion
 
-    //region Overrode adapter methods
-    public DailyScheduleAdapter(Activity activity, Context context, ArrayList<Run> runs) {
+    //region Overridden adapter methods
+    public DailyScheduleAdapter(Activity activity, Context context, ArrayList<Run> runs, Calendar date) {
         this.runs = runs;
         this.mContext = context;
         this.mActivity = activity;
+        this.date = date;
     }
 
     @Override
@@ -131,12 +133,10 @@ public class DailyScheduleAdapter
         setTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Set proper date here
-                Calendar time = Calendar.getInstance();
-                time.set(Calendar.HOUR_OF_DAY, hoursPicker.getValue());
-                time.set(Calendar.MINUTE, minutesPicker.getValue());
-                time.set(Calendar.SECOND, secondsPicker.getValue());
-                onTimePicked(time.getTime());
+                date.set(Calendar.HOUR_OF_DAY, hoursPicker.getValue());
+                date.set(Calendar.MINUTE, minutesPicker.getValue());
+                date.set(Calendar.SECOND, secondsPicker.getValue());
+                onTimePicked(date.getTime());
                 timePicker.dismiss();
             }
         });
@@ -145,7 +145,11 @@ public class DailyScheduleAdapter
     }
 
     private void onTimePicked(Date time) {
+        if (!correctRunTime(time))
+            return;
+
         Run run = runs.get(positionToSet / 2);
+
         if (positionToSet % 2 == 0)
             run.setStartDate(time);
         else
@@ -154,4 +158,46 @@ public class DailyScheduleAdapter
         runs.set(positionToSet / 2, run);
         viewToSet.setText(timeOfDay.format(time));
     }
+
+    //region Time checking
+    private boolean correctRunTime(Date time) {
+        // TODO: Proper testing of this utter fuckery
+        int runNumber = positionToSet / 2;
+        boolean start = positionToSet % 2 == 0;
+        Run run = runs.get(runNumber);
+
+        if (runNumber == 0) {
+            if (runs.size() == 1)
+                return isStartBeforeEnd(time, run, start);
+            else {
+                return isStartBeforeEnd(time, run, start) && isRunBeforeNext(time, runNumber);
+            }
+        }
+        else if (runNumber == runs.size() - 1) {
+            return isStartBeforeEnd(time, run, start) && isRunAfterPrevious(time, runNumber);
+        }
+        else {
+            return isStartBeforeEnd(time, run, start) &&
+                    isRunAfterPrevious(time, runNumber) &&
+                    isRunBeforeNext(time, runNumber);
+        }
+    }
+
+    private boolean isStartBeforeEnd(Date time, Run run, boolean start) {
+        if (start) {
+            return run.getEndDate() == null || run.getEndDate().after(time);
+        }
+        else {
+            return run.getStartDate() == null || run.getStartDate().before(time);
+        }
+    }
+
+    private boolean isRunAfterPrevious(Date time, int runNumber) {
+        return runs.get(runNumber - 1).getEndDate().before(time);
+    }
+
+    private boolean isRunBeforeNext(Date time, int runNumber) {
+        return runs.get(runNumber + 1).getStartDate().after(time);
+    }
+    //endregion
 }

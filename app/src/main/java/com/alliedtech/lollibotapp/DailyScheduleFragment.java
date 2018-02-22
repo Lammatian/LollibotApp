@@ -38,7 +38,6 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         view = inflater.inflate(R.layout.daily_schedule_fragment, container, false);
 
         setAddDate();
-        setGridView();
         setAddRunButton();
 
         return view;
@@ -82,11 +81,11 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         });
     }
 
-    private void setGridView() {
+    private void setGridView(Calendar date) {
         recyclerView = view.findViewById(R.id.dayGridView);
         runs = new ArrayList<>();
 
-        dailyScheduleRecyclerAdapter = new DailyScheduleAdapter(getActivity(), getContext(), runs);
+        dailyScheduleRecyclerAdapter = new DailyScheduleAdapter(getActivity(), getContext(), runs, date);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -110,6 +109,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         else {
             addDateButton.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
                     .format(date.getTime()));
+            setGridView(date);
         }
     }
 
