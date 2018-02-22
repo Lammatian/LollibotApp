@@ -3,6 +3,7 @@ package com.alliedtech.lollibotapp;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -64,16 +65,12 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
             @Override
             public void onClick(View view) {
                 if (addDateButton.getText() == getString(R.string.set_date)) {
-                    AlertDialog.Builder chooseDate = new AlertDialog.Builder(fragment.getContext())
-                            .setTitle("Date not chosen")
-                            .setMessage("Please choose date");
-                    chooseDate.show();
+                    alertDialog("Date not chosen",
+                            "Please choose date for this schedule");
                 }
                 else if (!runs.isEmpty() && !runs.get(runs.size() - 1).isSetUp()) {
-                    AlertDialog.Builder setRun = new AlertDialog.Builder(fragment.getContext())
-                            .setTitle("Run not set")
-                            .setMessage("Please set start and end time of last run");
-                    setRun.show();
+                    alertDialog("Run not set",
+                            "Please set start and end time of last run");
                 }
                 else {
                     Calendar calendar = Calendar.getInstance();
@@ -102,7 +99,31 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         date.set(Calendar.YEAR, year);
         date.set(Calendar.MONTH, month);
         date.set(Calendar.DAY_OF_MONTH, day);
-        addDateButton.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-                .format(date.getTime()));
+        date.set(Calendar.HOUR_OF_DAY, 23);
+        date.set(Calendar.MINUTE, 59);
+        date.set(Calendar.SECOND, 59);
+
+        if (date.before(Calendar.getInstance())) {
+            alertDialog("Incorrect date",
+                    "Date should be either today or future date");
+        }
+        else {
+            addDateButton.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+                    .format(date.getTime()));
+        }
+    }
+
+    private void alertDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+        builder.show();
     }
 }
