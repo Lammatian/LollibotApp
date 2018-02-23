@@ -16,9 +16,13 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 
+import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 public class DeviceActivity extends AppCompatActivity {
 
@@ -26,8 +30,9 @@ public class DeviceActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fabAddDay;
-    private DailyScheduleFragment daySchedule;
-    private ArrayList<DaySchedule> allSchedules;
+    private DailyScheduleFragment dayScheduleFragment;
+    private ScheduleFragment scheduleFragment;
+    private TreeMap<Date, DaySchedule> allSchedules;
     private boolean addingDayToSchedule = false;
 
     @Override
@@ -35,16 +40,15 @@ public class DeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        allSchedules = new ArrayList<>();
+        allSchedules = new TreeMap<>();
         //region Professional schedule testing
-        DaySchedule first = new DaySchedule(new Date());
-        DaySchedule second = new DaySchedule(new Date());
-        DaySchedule third = new DaySchedule(new Date());
-        DaySchedule fourth = new DaySchedule(new Date());
-        allSchedules.add(first);
-        allSchedules.add(second);
-        allSchedules.add(third);
-        allSchedules.add(fourth);
+        Calendar date = Calendar.getInstance();
+        ArrayList<Date> dates = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            dates.add(date.getTime());
+            date.add(Calendar.DATE, 1);
+            allSchedules.put(dates.get(i), new DaySchedule(dates.get(i)));
+        }
         //endregion
 
         appBarLayout = findViewById(R.id.appBarLayout);
@@ -61,14 +65,16 @@ public class DeviceActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     appBarLayout.setVisibility(View.GONE);
                     viewPager.setVisibility(View.GONE);
-                    daySchedule = new DailyScheduleFragment();
-                    fragmentTransaction.replace(R.id.fragment_container, daySchedule);
+                    dayScheduleFragment = new DailyScheduleFragment();
+                    fragmentTransaction.replace(R.id.fragment_container, dayScheduleFragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
                 else {
-                    if (daySchedule.isReady())
-                        allSchedules.add(daySchedule.getSchedule());
+                    if (dayScheduleFragment.isReady()) {
+                        allSchedules.put(dayScheduleFragment.getSchedule().getDate(), dayScheduleFragment.getSchedule());
+                        scheduleFragment.notifyDateSetChanged();
+                    }
 
                     appBarLayout.setVisibility(View.VISIBLE);
                     viewPager.setVisibility(View.VISIBLE);
@@ -159,7 +165,7 @@ public class DeviceActivity extends AppCompatActivity {
     // Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        ScheduleFragment scheduleFragment = new ScheduleFragment();
+        scheduleFragment = new ScheduleFragment();
         scheduleFragment.bind(allSchedules);
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();

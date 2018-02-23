@@ -113,7 +113,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
 
     public boolean isReady() {
         // We know that schedules before the last one have to be set up
-        return !runs.isEmpty() && runs.get(runs.size() - 1).isSetUp();
+        return runs.isReady();
     }
 
     public DaySchedule getSchedule() {

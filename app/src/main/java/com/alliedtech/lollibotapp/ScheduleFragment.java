@@ -14,12 +14,14 @@ import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TreeMap;
 
 public class ScheduleFragment extends Fragment {
 
     private View view;
     private GridView gridView;
-    private ArrayList<DaySchedule> daySchedules;
+    private TreeMap<Date, DaySchedule> daySchedules;
+    private ScheduleAdapter scheduleAdapter;
 
     @Nullable
     @Override
@@ -32,7 +34,7 @@ public class ScheduleFragment extends Fragment {
         return view;
     }
 
-    public void bind(ArrayList<DaySchedule> schedules) {
+    public void bind(TreeMap<Date, DaySchedule> schedules) {
         this.daySchedules = schedules;
     }
 
@@ -68,7 +70,11 @@ public class ScheduleFragment extends Fragment {
 
     private void setGridView() {
         gridView = view.findViewById(R.id.gridview);
-        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), daySchedules);
+        scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), daySchedules);
         gridView.setAdapter(scheduleAdapter);
+    }
+
+    public void notifyDateSetChanged() {
+        scheduleAdapter.notifyDataSetChanged();
     }
 }
