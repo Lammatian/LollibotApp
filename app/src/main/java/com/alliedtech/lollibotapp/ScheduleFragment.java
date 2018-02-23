@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class ScheduleFragment extends Fragment {
     private GridView gridView;
     private TreeMap<Date, DaySchedule> daySchedules;
     private ScheduleAdapter scheduleAdapter;
+    private AdapterView.OnItemClickListener onItemClickListener;
 
     @Nullable
     @Override
@@ -36,6 +38,11 @@ public class ScheduleFragment extends Fragment {
 
     public void bind(TreeMap<Date, DaySchedule> schedules) {
         this.daySchedules = schedules;
+    }
+
+    // There is definitely a better way to achieve this but that's all I came up with
+    public void bindOnItemClickListener(AdapterView.OnItemClickListener listener) {
+        onItemClickListener = listener;
     }
 
     private void setTodayView() {
@@ -72,6 +79,7 @@ public class ScheduleFragment extends Fragment {
         gridView = view.findViewById(R.id.gridview);
         scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), daySchedules);
         gridView.setAdapter(scheduleAdapter);
+        gridView.setOnItemClickListener(onItemClickListener);
     }
 
     public void notifyDateSetChanged() {

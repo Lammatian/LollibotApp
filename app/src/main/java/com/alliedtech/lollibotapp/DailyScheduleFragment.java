@@ -23,6 +23,7 @@ import java.util.Locale;
 
 public class DailyScheduleFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
+    private boolean binded = false;
     private View view;
     private Button addDateButton;
     private Button addRunButton;
@@ -41,6 +42,11 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         return view;
     }
 
+    public void bind(DaySchedule schedule) {
+        runs = schedule;
+        binded = true;
+    }
+
     private void setAddDate() {
         addDateButton = view.findViewById(R.id.addDateButton);
         addDateButton.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +60,14 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
                 datePickerDialog.show();
             }
         });
+
+        if (binded) {
+            addDateButton.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+                    .format(runs.getDate()));
+            Calendar date = Calendar.getInstance();
+            date.setTime(runs.getDate());
+            setGridView(date);
+        }
     }
 
     private void setAddRunButton() {
@@ -81,7 +95,8 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
 
     private void setGridView(Calendar date) {
         recyclerView = view.findViewById(R.id.dayGridView);
-        runs = new DaySchedule(date.getTime());
+        if (runs == null)
+            runs = new DaySchedule(date.getTime());
 
         dailyScheduleRecyclerAdapter = new DailyScheduleAdapter(getActivity(), getContext(), runs);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);

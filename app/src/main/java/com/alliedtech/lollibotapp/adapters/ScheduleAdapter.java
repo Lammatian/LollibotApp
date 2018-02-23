@@ -87,6 +87,7 @@ public class ScheduleAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
+
     private static class ScheduleDayViewHolder {
         TextView date;
         TextView scheduled_items;

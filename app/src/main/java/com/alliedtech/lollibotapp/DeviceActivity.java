@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
 
 import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
 
@@ -57,63 +58,10 @@ public class DeviceActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         fabAddDay = findViewById(R.id.fabAddDay);
-        fabAddDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!addingDayToSchedule) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    appBarLayout.setVisibility(View.GONE);
-                    viewPager.setVisibility(View.GONE);
-                    dayScheduleFragment = new DailyScheduleFragment();
-                    fragmentTransaction.replace(R.id.fragment_container, dayScheduleFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                }
-                else {
-                    if (dayScheduleFragment.isReady()) {
-                        allSchedules.put(dayScheduleFragment.getSchedule().getDate(), dayScheduleFragment.getSchedule());
-                        scheduleFragment.notifyDateSetChanged();
-                    }
-
-                    appBarLayout.setVisibility(View.VISIBLE);
-                    viewPager.setVisibility(View.VISIBLE);
-
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.popBackStack();
-                }
-
-                addingDayToSchedule = !addingDayToSchedule;
-            }
-        });
+        setUpFabAddDay(fabAddDay);
 
         tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);//setting tab over viewpager
-        //Implementing tab selected listener over tab layout
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
-                switch (tab.getPosition()) {
-                    case 0:
-                        Log.i("tab-change", "Tab 1");
-                        break;
-                    case 1:
-                        Log.i("tab-change", "Tab 2");
-                        break;
-                }
-
-                animateFab(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+        setUpTabLayout(tabLayout);
     }
 
     protected void animateFab(final int tab) {
@@ -165,8 +113,17 @@ public class DeviceActivity extends AppCompatActivity {
     // Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                openDailySchedule(position);
+            }
+        };
         scheduleFragment = new ScheduleFragment();
+        // Fragments are stupid and cannot be instantiated with arguments so we have to bind them
         scheduleFragment.bind(allSchedules);
+        // Set the item click listener to open the correct item's daily schedule
+        scheduleFragment.bindOnItemClickListener(onItemClickListener);
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();
         adapter.addFrag(statusFragment, "Status");
@@ -204,6 +161,79 @@ public class DeviceActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+    }
+    //endregion
+
+    private void setUpFabAddDay(FloatingActionButton fabAddDay) {
+        fabAddDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!addingDayToSchedule)
+                    openDailySchedule(-1);
+                else
+                    closeDailySchedule();
+            }
+        });
+    }
+
+    private void setUpTabLayout(TabLayout tabLayout) {
+        tabLayout.setupWithViewPager(viewPager);//setting tab over viewpager
+        //Implementing tab selected listener over tab layout
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());//setting current selected item over viewpager
+                switch (tab.getPosition()) {
+                    case 0:
+                        Log.i("tab-change", "Tab 1");
+                        break;
+                    case 1:
+                        Log.i("tab-change", "Tab 2");
+                        break;
+                }
+
+                animateFab(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) { }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) { }
+        });
+    }
+
+    //region Daily schedule open/close
+    private void openDailySchedule(int position) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        appBarLayout.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        dayScheduleFragment = new DailyScheduleFragment();
+        if (position >= 0) {
+            Date scheduleDate = allSchedules.keySet().toArray(new Date[allSchedules.size()])[position];
+            dayScheduleFragment.bind(allSchedules.get(scheduleDate));
+        }
+        fragmentTransaction.replace(R.id.fragment_container, dayScheduleFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        addingDayToSchedule = !addingDayToSchedule;
+    }
+
+    private void closeDailySchedule() {
+        if (dayScheduleFragment.isReady()) {
+            allSchedules.put(dayScheduleFragment.getSchedule().getDate(), dayScheduleFragment.getSchedule());
+            scheduleFragment.notifyDateSetChanged();
+        }
+
+        appBarLayout.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack();
+
+        addingDayToSchedule = !addingDayToSchedule;
     }
     //endregion
 }
