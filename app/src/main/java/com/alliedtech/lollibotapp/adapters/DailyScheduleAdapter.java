@@ -15,12 +15,11 @@ import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import com.alliedtech.lollibotapp.TimePickerFragment;
+import com.alliedtech.lollibotapp.DaySchedule;
 import com.alliedtech.lollibotapp.R;
 import com.alliedtech.lollibotapp.Run;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -28,10 +27,10 @@ import java.util.Locale;
 public class DailyScheduleAdapter
         extends RecyclerView.Adapter<DailyScheduleAdapter.DailyViewHolder> {
 
-    private ArrayList<Run> runs;
+    private DaySchedule runs;
     private Context mContext;
     private Activity mActivity;
-    private Calendar date;
+    private Calendar date = Calendar.getInstance();
     private int positionToSet;
     private TextView viewToSet;
     private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
@@ -49,11 +48,11 @@ public class DailyScheduleAdapter
     //endregion
 
     //region Overridden adapter methods
-    public DailyScheduleAdapter(Activity activity, Context context, ArrayList<Run> runs, Calendar date) {
+    public DailyScheduleAdapter(Activity activity, Context context, DaySchedule runs) {
         this.runs = runs;
         this.mContext = context;
         this.mActivity = activity;
-        this.date = date;
+        this.date.setTime(runs.getDate());
     }
 
     @Override

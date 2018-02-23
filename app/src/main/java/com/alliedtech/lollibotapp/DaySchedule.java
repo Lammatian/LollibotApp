@@ -6,37 +6,37 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class DaySchedule {
+public class DaySchedule extends ArrayList<Run> {
 
     private Date date;
-    private ArrayList<DatePair> times;
+    private ArrayList<Run> runs;
     private final DateFormat datetimeToDate = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
-    DaySchedule(Date date, ArrayList<DatePair> times) {
+    DaySchedule(Date date, ArrayList<Run> times) {
         this.date = date;
-        this.times = times;
+        this.runs = times;
     }
 
     DaySchedule(Date date) {
         this.date = date;
-        this.times = new ArrayList<>();
+        this.runs = new ArrayList<>();
+    }
+
+    public Date getDate() {
+        return this.date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public int getScheduledRuns() {
-        return this.times.size();
+        return this.runs.size();
     }
 
     public String getFormattedDate() {
         return datetimeToDate.format(this.date);
     }
 
-    static class DatePair {
-        final Date start;
-        final Date end;
-
-        DatePair(Date start, Date end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
+    public boolean isReady() { return date != null && !runs.isEmpty() && runs.get(runs.size() - 1).isSetUp(); }
 }

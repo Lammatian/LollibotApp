@@ -25,12 +25,16 @@ public class DeviceActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fabAddDay;
+    private DailyScheduleFragment daySchedule;
+    private ArrayList<ArrayList<Run>> schedules;
     private boolean addingDayToSchedule = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        schedules = new ArrayList<>();
 
         appBarLayout = findViewById(R.id.appBarLayout);
 
@@ -46,12 +50,15 @@ public class DeviceActivity extends AppCompatActivity {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     appBarLayout.setVisibility(View.GONE);
                     viewPager.setVisibility(View.GONE);
-                    DailyScheduleFragment fragment = new DailyScheduleFragment();
-                    fragmentTransaction.replace(R.id.fragment_container, fragment);
+                    daySchedule = new DailyScheduleFragment();
+                    fragmentTransaction.replace(R.id.fragment_container, daySchedule);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
                 else {
+                    if (daySchedule.isReady())
+                        schedules.add(daySchedule.getSchedule());
+
                     appBarLayout.setVisibility(View.VISIBLE);
                     viewPager.setVisibility(View.VISIBLE);
 
@@ -107,9 +114,7 @@ public class DeviceActivity extends AppCompatActivity {
         shrink.setInterpolator(new DecelerateInterpolator());
         shrink.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
+            public void onAnimationStart(Animation animation) { }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -117,9 +122,7 @@ public class DeviceActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
+            public void onAnimationRepeat(Animation animation) { }
         });
 
         fabAddDay.startAnimation(shrink);

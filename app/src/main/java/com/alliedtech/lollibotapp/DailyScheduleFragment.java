@@ -29,7 +29,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
     private Button addDateButton;
     private Button addRunButton;
     private RecyclerView recyclerView;
-    private ArrayList<Run> runs;
+    private DaySchedule runs;
     private DailyScheduleFragment fragment = this;
     private DailyScheduleAdapter dailyScheduleRecyclerAdapter;
 
@@ -83,9 +83,9 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
 
     private void setGridView(Calendar date) {
         recyclerView = view.findViewById(R.id.dayGridView);
-        runs = new ArrayList<>();
+        runs = new DaySchedule(date.getTime());
 
-        dailyScheduleRecyclerAdapter = new DailyScheduleAdapter(getActivity(), getContext(), runs, date);
+        dailyScheduleRecyclerAdapter = new DailyScheduleAdapter(getActivity(), getContext(), runs);
         recyclerView.setAdapter(dailyScheduleRecyclerAdapter);
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -111,6 +111,15 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
                     .format(date.getTime()));
             setGridView(date);
         }
+    }
+
+    public boolean isReady() {
+        // We know that schedules before the last one have to be set up
+        return !runs.isEmpty() && runs.get(runs.size() - 1).isSetUp();
+    }
+
+    public ArrayList<Run> getSchedule() {
+        return runs;
     }
 
     private void alertDialog(String title, String message) {

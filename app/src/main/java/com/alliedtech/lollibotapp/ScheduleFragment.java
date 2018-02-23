@@ -35,7 +35,7 @@ public class ScheduleFragment extends Fragment {
      * Set today's date and scheduled items
      */
     private void setTodayView() {
-        DaySchedule today = new DaySchedule(new Date(), new ArrayList<DaySchedule.DatePair>());
+        DaySchedule today = new DaySchedule(new Date());
 
         TextView todayDate = view.findViewById(R.id.todayScheduleDate);
         String todayDateText = getContext().getString(R.string.schedule_today_date_text,
@@ -70,16 +70,15 @@ public class ScheduleFragment extends Fragment {
     private void setGridView() {
         gridView = view.findViewById(R.id.gridview);
         // Testing below
+        DaySchedule first = new DaySchedule(new Date());
+        DaySchedule second = new DaySchedule(new Date());
+        DaySchedule third = new DaySchedule(new Date());
+        DaySchedule fourth = new DaySchedule(new Date());
         ArrayList<DaySchedule> days = new ArrayList<>();
-        ArrayList<DaySchedule.DatePair> times = new ArrayList<>();
-        DaySchedule.DatePair dp = new DaySchedule.DatePair(new Date(), new Date());
-        times.add(dp);
-        DaySchedule ds = new DaySchedule(new Date(), times);
-        days.add(ds);
-        days.add(new DaySchedule(new Date()));
-        days.add(new DaySchedule(new Date()));
-        days.add(new DaySchedule(new Date()));
-        days.add(new DaySchedule(new Date()));
+        days.add(first);
+        days.add(second);
+        days.add(third);
+        days.add(fourth);
         ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), days);
         gridView.setAdapter(scheduleAdapter);
     }
