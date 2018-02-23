@@ -19,6 +19,7 @@ public class ScheduleFragment extends Fragment {
 
     private View view;
     private GridView gridView;
+    private ArrayList<DaySchedule> daySchedules;
 
     @Nullable
     @Override
@@ -31,9 +32,10 @@ public class ScheduleFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Set today's date and scheduled items
-     */
+    public void bind(ArrayList<DaySchedule> schedules) {
+        this.daySchedules = schedules;
+    }
+
     private void setTodayView() {
         DaySchedule today = new DaySchedule(new Date());
 
@@ -64,22 +66,9 @@ public class ScheduleFragment extends Fragment {
         todayItems.setText(todayItemsText);
     }
 
-    /**
-     * Setting recycler view for the gridview
-     */
     private void setGridView() {
         gridView = view.findViewById(R.id.gridview);
-        // Testing below
-        DaySchedule first = new DaySchedule(new Date());
-        DaySchedule second = new DaySchedule(new Date());
-        DaySchedule third = new DaySchedule(new Date());
-        DaySchedule fourth = new DaySchedule(new Date());
-        ArrayList<DaySchedule> days = new ArrayList<>();
-        days.add(first);
-        days.add(second);
-        days.add(third);
-        days.add(fourth);
-        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), days);
+        ScheduleAdapter scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), daySchedules);
         gridView.setAdapter(scheduleAdapter);
     }
 }

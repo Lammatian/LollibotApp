@@ -118,7 +118,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         return !runs.isEmpty() && runs.get(runs.size() - 1).isSetUp();
     }
 
-    public ArrayList<Run> getSchedule() {
+    public DaySchedule getSchedule() {
         return runs;
     }
 

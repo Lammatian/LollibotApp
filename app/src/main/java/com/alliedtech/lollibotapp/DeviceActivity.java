@@ -17,6 +17,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DeviceActivity extends AppCompatActivity {
@@ -26,7 +27,7 @@ public class DeviceActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private FloatingActionButton fabAddDay;
     private DailyScheduleFragment daySchedule;
-    private ArrayList<ArrayList<Run>> schedules;
+    private ArrayList<DaySchedule> allSchedules;
     private boolean addingDayToSchedule = false;
 
     @Override
@@ -34,7 +35,17 @@ public class DeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        schedules = new ArrayList<>();
+        allSchedules = new ArrayList<>();
+        //region Professional schedule testing
+        DaySchedule first = new DaySchedule(new Date());
+        DaySchedule second = new DaySchedule(new Date());
+        DaySchedule third = new DaySchedule(new Date());
+        DaySchedule fourth = new DaySchedule(new Date());
+        allSchedules.add(first);
+        allSchedules.add(second);
+        allSchedules.add(third);
+        allSchedules.add(fourth);
+        //endregion
 
         appBarLayout = findViewById(R.id.appBarLayout);
 
@@ -57,7 +68,7 @@ public class DeviceActivity extends AppCompatActivity {
                 }
                 else {
                     if (daySchedule.isReady())
-                        schedules.add(daySchedule.getSchedule());
+                        allSchedules.add(daySchedule.getSchedule());
 
                     appBarLayout.setVisibility(View.VISIBLE);
                     viewPager.setVisibility(View.VISIBLE);
@@ -149,6 +160,7 @@ public class DeviceActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         ScheduleFragment scheduleFragment = new ScheduleFragment();
+        scheduleFragment.bind(allSchedules);
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();
         adapter.addFrag(statusFragment, "Status");

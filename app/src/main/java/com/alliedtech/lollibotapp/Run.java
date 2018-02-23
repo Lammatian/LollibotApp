@@ -23,5 +23,5 @@ public class Run {
         endDate = date;
     }
 
-    public boolean isSetUp() { return startDate != null && endDate != null; }
+    boolean isSetUp() { return startDate != null && endDate != null; }
 }
