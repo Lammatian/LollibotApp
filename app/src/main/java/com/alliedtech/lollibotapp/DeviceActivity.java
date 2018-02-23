@@ -217,6 +217,7 @@ public class DeviceActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, dayScheduleFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        fabAddDay.setImageResource(R.mipmap.ic_close_black);
 
         addingDayToSchedule = !addingDayToSchedule;
     }
@@ -232,6 +233,7 @@ public class DeviceActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
+        fabAddDay.setImageResource(R.mipmap.ic_add_black);
 
         addingDayToSchedule = !addingDayToSchedule;
     }

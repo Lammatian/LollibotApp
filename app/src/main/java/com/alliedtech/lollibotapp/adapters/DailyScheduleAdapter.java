@@ -2,16 +2,15 @@ package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -33,6 +32,7 @@ public class DailyScheduleAdapter
     private Calendar date = Calendar.getInstance();
     private int positionToSet;
     private TextView viewToSet;
+    private FloatingActionButton fabAddDay;
     private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 
     //region View holder
@@ -50,9 +50,10 @@ public class DailyScheduleAdapter
     //region Overridden adapter methods
     public DailyScheduleAdapter(Activity activity, Context context, DaySchedule runs) {
         this.runs = runs;
-        this.mContext = context;
-        this.mActivity = activity;
-        this.date.setTime(runs.getDate());
+        mContext = context;
+        mActivity = activity;
+        date.setTime(runs.getDate());
+        fabAddDay = activity.findViewById(R.id.fabAddDay);
     }
 
     @Override
@@ -169,6 +170,9 @@ public class DailyScheduleAdapter
 
             runs.set(positionToSet / 2, run);
             viewToSet.setText(timeOfDay.format(time));
+
+            if (runs.isReady())
+                fabAddDay.setImageResource(R.mipmap.ic_check_black);
         }
     }
 

@@ -3,6 +3,7 @@ package com.alliedtech.lollibotapp;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -23,10 +24,11 @@ import java.util.Locale;
 
 public class DailyScheduleFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
 
-    private boolean binded = false;
+    private boolean bound = false;
     private View view;
     private Button addDateButton;
     private Button addRunButton;
+    private FloatingActionButton fabAddDay;
     private RecyclerView recyclerView;
     private DaySchedule runs;
     private DailyScheduleFragment fragment = this;
@@ -36,6 +38,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.daily_schedule_fragment, container, false);
 
+        fabAddDay = getActivity().findViewById(R.id.fabAddDay);
         setAddDate();
         setAddRunButton();
 
@@ -44,7 +47,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
 
     public void bind(DaySchedule schedule) {
         runs = schedule;
-        binded = true;
+        bound = true;
     }
 
     private void setAddDate() {
@@ -61,7 +64,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
             }
         });
 
-        if (binded) {
+        if (bound) {
             addDateButton.setText(new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
                     .format(runs.getDate()));
             Calendar date = Calendar.getInstance();
@@ -75,6 +78,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: This looks ugly
                 if (addDateButton.getText() == getString(R.string.set_date)) {
                     alertDialog("Date not chosen",
                             "Please choose date for this schedule");
@@ -88,6 +92,8 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
                     calendar.setTime(new Date());
                     runs.add(new Run(null, null));
                     dailyScheduleRecyclerAdapter.notifyDataSetChanged();
+                    // TODO: This could probably be done nicely in a systematic way
+                    fabAddDay.setImageResource(R.mipmap.ic_close_black);
                 }
             }
         });
@@ -128,7 +134,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
 
     public boolean isReady() {
         // We know that schedules before the last one have to be set up
-        return runs.isReady();
+        return runs != null && runs.isReady();
     }
 
     public DaySchedule getSchedule() {

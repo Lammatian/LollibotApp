@@ -31,5 +31,5 @@ public class DaySchedule extends ArrayList<Run> {
         return datetimeToDate.format(this.date);
     }
 
-    boolean isReady() { return date != null && !isEmpty() && get(size() - 1).isSetUp(); }
+    public boolean isReady() { return date != null && !isEmpty() && get(size() - 1).isSetUp(); }
 }
