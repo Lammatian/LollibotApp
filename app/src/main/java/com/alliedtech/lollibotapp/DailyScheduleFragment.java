@@ -2,7 +2,6 @@ package com.alliedtech.lollibotapp;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.alliedtech.lollibotapp.adapters.DailyScheduleAdapter;
 import com.alliedtech.lollibotapp.decoration.SpacesItemDecoration;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
