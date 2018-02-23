@@ -1,8 +1,13 @@
 package com.alliedtech.lollibotapp;
 
+import android.graphics.drawable.Animatable2;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.graphics.drawable.Animatable2Compat;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -34,6 +39,8 @@ public class DeviceActivity extends AppCompatActivity {
     private DailyScheduleFragment dayScheduleFragment;
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
+    private AnimatedVectorDrawableCompat[] drawables;
+    private int currentDrawable = 0;
     private boolean addingDayToSchedule = false;
 
     @Override
@@ -165,6 +172,12 @@ public class DeviceActivity extends AppCompatActivity {
     //endregion
 
     private void setUpFabAddDay(FloatingActionButton fabAddDay) {
+        drawables = new AnimatedVectorDrawableCompat[5];
+        drawables[0] = AnimatedVectorDrawableCompat.create(getApplicationContext(),
+                R.drawable.ic_animated_plus_to_cross);
+        drawables[1] = AnimatedVectorDrawableCompat.create(getApplicationContext(),
+                R.drawable.ic_animated_cross_to_plus);
+
         fabAddDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -217,7 +230,10 @@ public class DeviceActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, dayScheduleFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        fabAddDay.setImageResource(R.mipmap.ic_close_black);
+
+        //region Animation testing
+        animateFabTransition(R.drawable.ic_close_black_48dp, 1);
+        //endregion
 
         addingDayToSchedule = !addingDayToSchedule;
     }
@@ -233,9 +249,29 @@ public class DeviceActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
-        fabAddDay.setImageResource(R.mipmap.ic_add_black);
+
+        //region Animation testing
+        animateFabTransition(R.drawable.ic_add_black_48dp, 0);
+        //endregion
 
         addingDayToSchedule = !addingDayToSchedule;
+    }
+
+    private void animateFabTransition(final int resourceId, int newCurrentDrawable) {
+        fabAddDay.setImageDrawable(drawables[currentDrawable]);
+
+        drawables[currentDrawable].registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                drawable.setCallback(null);
+
+                fabAddDay.setImageResource(resourceId);
+            }
+        });
+
+        drawables[currentDrawable].start();
+
+        currentDrawable = newCurrentDrawable;
     }
     //endregion
 }
