@@ -1,11 +1,7 @@
 package com.alliedtech.lollibotapp;
 
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.graphics.drawable.Animatable2Compat;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -40,7 +36,7 @@ public class DeviceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_device);
 
         allSchedules = new TreeMap<>();
         //region Professional schedule testing
