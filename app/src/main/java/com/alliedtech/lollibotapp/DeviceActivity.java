@@ -35,8 +35,6 @@ public class DeviceActivity extends AppCompatActivity {
     private DailyScheduleFragment dayScheduleFragment;
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
-    private AnimatedVectorDrawableCompat[] drawables;
-    private int currentDrawable = 0;
     private boolean addingDayToSchedule = false;
 
     @Override
@@ -221,10 +219,8 @@ public class DeviceActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-        //region Animation testing
-        fabAddDay.transition(R.drawable.ic_close_custom, 1);
-//        animateFabTransition(R.drawable.ic_close_custom, 1);
-        //endregion
+        Log.d("Fab transition", "Transition from + to X");
+        fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
 
         addingDayToSchedule = !addingDayToSchedule;
     }
@@ -241,29 +237,10 @@ public class DeviceActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
 
-        //region Animation testing
-        fabAddDay.transition(R.drawable.ic_add_custom, 0);
-//        animateFabTransition(R.drawable.ic_add_custom, 0);
-        //endregion
+        Log.d("Fab transition", "Transition from ? to +");
+        fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
 
         addingDayToSchedule = !addingDayToSchedule;
-    }
-
-    private void animateFabTransition(final int resourceId, int newCurrentDrawable) {
-        fabAddDay.setImageDrawable(drawables[currentDrawable]);
-
-        drawables[currentDrawable].registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
-            @Override
-            public void onAnimationEnd(Drawable drawable) {
-                drawable.setCallback(null);
-
-                fabAddDay.setImageResource(resourceId);
-            }
-        });
-
-        drawables[currentDrawable].start();
-
-        currentDrawable = newCurrentDrawable;
     }
     //endregion
 }

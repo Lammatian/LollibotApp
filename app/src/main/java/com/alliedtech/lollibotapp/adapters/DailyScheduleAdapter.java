@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,9 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.alliedtech.lollibotapp.AnimatedFloatingActionButton;
 import com.alliedtech.lollibotapp.DaySchedule;
+import com.alliedtech.lollibotapp.FabState;
 import com.alliedtech.lollibotapp.R;
 import com.alliedtech.lollibotapp.Run;
 
@@ -35,7 +38,7 @@ public class DailyScheduleAdapter
     private Calendar date = Calendar.getInstance();
     private int positionToSet;
     private TextView viewToSet;
-    private FloatingActionButton fabAddDay;
+    private AnimatedFloatingActionButton fabAddDay;
     private SimpleDateFormat timeOfDay = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
 
     //region View holder
@@ -175,19 +178,8 @@ public class DailyScheduleAdapter
             viewToSet.setText(timeOfDay.format(time));
 
             if (runs.isReady()) {
-//                fabAddDay.setImageResource(R.drawable.ic_check_custom);
-                AnimatedVectorDrawableCompat drawable = AnimatedVectorDrawableCompat.create(mContext, R.drawable.ic_animated_close_to_check);
-                fabAddDay.setImageDrawable(drawable);
-                drawable.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
-                    @Override
-                    public void onAnimationEnd(Drawable drawable) {
-                        drawable.setCallback(null);
-
-                        fabAddDay.setImageResource(R.drawable.ic_check_custom);
-                    }
-                });
-
-                drawable.start();
+                Log.d("Fab Transition", "Transition from X to check");
+                fabAddDay.transition(R.drawable.ic_check_custom, FabState.CHECK);
             }
         }
     }

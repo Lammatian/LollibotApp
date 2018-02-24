@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
     private View view;
     private Button addDateButton;
     private Button addRunButton;
-    private FloatingActionButton fabAddDay;
+    private AnimatedFloatingActionButton fabAddDay;
     private RecyclerView recyclerView;
     private DaySchedule runs;
     private DailyScheduleFragment fragment = this;
@@ -93,7 +94,8 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
                     runs.add(new Run(null, null));
                     dailyScheduleRecyclerAdapter.notifyDataSetChanged();
                     // TODO: This could probably be done nicely in a systematic way
-                    fabAddDay.setImageResource(R.mipmap.ic_close_black);
+                    Log.d("Fab transition", "Transition from ? to X");
+                    fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
                 }
             }
         });
