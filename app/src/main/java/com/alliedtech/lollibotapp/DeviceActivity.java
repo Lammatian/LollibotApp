@@ -1,7 +1,5 @@
 package com.alliedtech.lollibotapp;
 
-import android.graphics.drawable.Animatable2;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -22,8 +20,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 
-import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +31,7 @@ public class DeviceActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
-    private FloatingActionButton fabAddDay;
+    private AnimatedFloatingActionButton fabAddDay;
     private DailyScheduleFragment dayScheduleFragment;
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
@@ -52,7 +48,7 @@ public class DeviceActivity extends AppCompatActivity {
         //region Professional schedule testing
         Calendar date = Calendar.getInstance();
         ArrayList<Date> dates = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             dates.add(date.getTime());
             date.add(Calendar.DATE, 1);
             allSchedules.put(dates.get(i), new DaySchedule(dates.get(i)));
@@ -171,14 +167,8 @@ public class DeviceActivity extends AppCompatActivity {
     }
     //endregion
 
-    private void setUpFabAddDay(FloatingActionButton fabAddDay) {
-        drawables = new AnimatedVectorDrawableCompat[5];
-        drawables[0] = AnimatedVectorDrawableCompat.create(getApplicationContext(),
-                R.drawable.ic_animated_plus_to_cross);
-        drawables[1] = AnimatedVectorDrawableCompat.create(getApplicationContext(),
-                R.drawable.ic_animated_cross_to_plus);
-
-        fabAddDay.setOnClickListener(new View.OnClickListener() {
+    private void setUpFabAddDay(AnimatedFloatingActionButton fabAddDay) {
+        fabAddDay.setUpDrawables(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!addingDayToSchedule)
@@ -232,7 +222,8 @@ public class DeviceActivity extends AppCompatActivity {
         fragmentTransaction.commit();
 
         //region Animation testing
-        animateFabTransition(R.drawable.ic_close_black_48dp, 1);
+        fabAddDay.transition(R.drawable.ic_close_custom, 1);
+//        animateFabTransition(R.drawable.ic_close_custom, 1);
         //endregion
 
         addingDayToSchedule = !addingDayToSchedule;
@@ -251,7 +242,8 @@ public class DeviceActivity extends AppCompatActivity {
         fragmentManager.popBackStack();
 
         //region Animation testing
-        animateFabTransition(R.drawable.ic_add_black_48dp, 0);
+        fabAddDay.transition(R.drawable.ic_add_custom, 0);
+//        animateFabTransition(R.drawable.ic_add_custom, 0);
         //endregion
 
         addingDayToSchedule = !addingDayToSchedule;

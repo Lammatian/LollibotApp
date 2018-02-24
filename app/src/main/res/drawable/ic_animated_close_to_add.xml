@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/ic_add_black_48dp">
+    android:drawable="@drawable/ic_close_custom">
 
     <target
-        android:animation="@animator/animation_plus_rotation"
-        android:name="cross" />
+        android:animation="@animator/animation_close_rotation"
+        android:name="close" />
 </animated-vector>

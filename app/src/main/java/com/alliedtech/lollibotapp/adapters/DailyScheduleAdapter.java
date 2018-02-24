@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.graphics.drawable.Animatable2Compat;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,8 +174,21 @@ public class DailyScheduleAdapter
             runs.set(positionToSet / 2, run);
             viewToSet.setText(timeOfDay.format(time));
 
-            if (runs.isReady())
-                fabAddDay.setImageResource(R.mipmap.ic_check_black);
+            if (runs.isReady()) {
+//                fabAddDay.setImageResource(R.drawable.ic_check_custom);
+                AnimatedVectorDrawableCompat drawable = AnimatedVectorDrawableCompat.create(mContext, R.drawable.ic_animated_close_to_check);
+                fabAddDay.setImageDrawable(drawable);
+                drawable.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+                    @Override
+                    public void onAnimationEnd(Drawable drawable) {
+                        drawable.setCallback(null);
+
+                        fabAddDay.setImageResource(R.drawable.ic_check_custom);
+                    }
+                });
+
+                drawable.start();
+            }
         }
     }
 
