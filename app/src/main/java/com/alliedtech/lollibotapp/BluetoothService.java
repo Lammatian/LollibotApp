@@ -23,6 +23,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
+//TODO: Fix handler messages mess
+//TODO: Fix mess in general
+//TODO: Documentation
 public class BluetoothService extends Service {
 
     private static final String TAG = "BLUETOOTH SERVICE";
@@ -53,6 +56,11 @@ public class BluetoothService extends Service {
 
     public void change() {
         test = (test.equals("test1")) ? "test2" : "test1";
+        Message msg = new Message();
+        Bundle data = new Bundle();
+        data.putInt("Ayyy", 0);
+        msg.setData(data);
+        mHandler.sendMessage(msg);
     }
     //endregion
 
@@ -80,7 +88,10 @@ public class BluetoothService extends Service {
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
     }
 
-    //Method to know if bluetooth is available
+    public void setHandler(Handler handler) {
+        mHandler = handler;
+    }
+
     boolean isAvailable() {
         return !(btAdapter == null || !(btAdapter.isEnabled()));
     }
@@ -95,7 +106,6 @@ public class BluetoothService extends Service {
         return deviceSignalStrength;
     }
 
-    //This is the receiver that basically returns all devices whether bonded or not
     private final BroadcastReceiver btReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -113,7 +123,6 @@ public class BluetoothService extends Service {
         }
     };
 
-    //Gets all bluetooth devices, and the btReceiver adds all the devices to the arraylist
     private void scan() {
         bondedDevices = new ArrayList<>(btAdapter.getBondedDevices());
 
@@ -128,13 +137,32 @@ public class BluetoothService extends Service {
     }
 
     public void connect(int index) {
-        ConnectThread connectThread = new ConnectThread(bondedDevices.get(index));
-        connectThread.start();
+        if (mConnectThread != null) {
+            mConnectThread.cancel();
+            mConnectThread = null;
+        }
+
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
+        }
+        mConnectThread = new ConnectThread(bondedDevices.get(index));
+        mConnectThread.start();
     }
 
     public void connected(BluetoothSocket socket, BluetoothDevice device) {
-        ConnectedThread connectedThread = new ConnectedThread(socket, device);
-        connectedThread.start();
+        if (mConnectThread != null) {
+            mConnectThread.cancel();
+            mConnectThread = null;
+        }
+
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
+        }
+
+        mConnectedThread = new ConnectedThread(socket, device);
+        mConnectedThread.start();
     }
 
     //region Connection failure handlers
@@ -225,17 +253,15 @@ public class BluetoothService extends Service {
     // Defines several constants used when transmitting messages between the
     // service and the UI.
     private interface MessageConstants {
-        public static final int MESSAGE_READ = 0;
-        public static final int MESSAGE_WRITE = 1;
-        public static final int MESSAGE_TOAST = 2;
-
-        // ... (Add other message types here as needed.)
+        int MESSAGE_READ = 0;
+        int MESSAGE_WRITE = 1;
     }
 
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+        //TODO: Device may not be necessary but will be here for now
         private final BluetoothDevice mmDevice;
         private byte[] mmBuffer; // mmBuffer store for the stream
 
@@ -261,6 +287,9 @@ public class BluetoothService extends Service {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
             mState = STATE_CONNECTED;
+
+            // Inform the application about connection being established
+            mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, mState, -1).sendToTarget();
         }
 
         public void run() {

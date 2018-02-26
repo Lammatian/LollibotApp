@@ -1,9 +1,12 @@
 package com.alliedtech.lollibotapp;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    public AppCompatActivity thisActivity = this;
     boolean mBounded;
     BluetoothService mService;
 
@@ -24,9 +28,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeActivity(View view) {
+        changeActivity();
+    }
+
+    public void changeActivity() {
         Intent intent = new Intent(MainActivity.this, Main2Activity.class);
         MainActivity.this.startActivity(intent);
     }
+
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Activity activity = thisActivity;
+            switch (msg.what) {
+                case 0:
+                    changeActivity();
+                    break;
+                case 1:
+                    Toast.makeText(getApplicationContext(), "Heyyy", Toast.LENGTH_SHORT);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             mBounded = true;
             BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
             mService = mLocalBinder.getServerInstance();
+            mService.setHandler(mHandler);
         }
     };
 }
