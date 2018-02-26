@@ -1,5 +1,6 @@
 package com.alliedtech.lollibotapp;
 
+//TODO: Clean up message constants
 public interface Constants {
     // Message types sent from the BluetoothChatService Handler
     int MESSAGE_CONNECTED = 0;

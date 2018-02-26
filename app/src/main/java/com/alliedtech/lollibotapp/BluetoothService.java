@@ -189,6 +189,27 @@ public class BluetoothService extends Service {
     }
     //endregion
 
+    public void write(RobotCommand command) {
+        ConnectedThread t;
+
+        synchronized (this) {
+            if (mState != STATE_CONNECTED) return;
+            t = mConnectedThread;
+        }
+
+        t.write(("[" + command + "]").getBytes());
+    }
+
+    public void write(RobotCommand command, String argument) {
+        ConnectedThread t;
+
+        synchronized (this) {
+            if (mState != STATE_CONNECTED) return;
+            t = mConnectedThread;
+        }
+        t.write(("[" + command + "*" + argument + "*]").getBytes());
+    }
+
     //region Establishing connection thread
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
@@ -239,7 +260,7 @@ public class BluetoothService extends Service {
         }
 
         // Closes the client socket and causes the thread to finish.
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {
@@ -315,7 +336,7 @@ public class BluetoothService extends Service {
         }
 
         // Call this from the main activity to send data to the remote device.
-        public void write(byte[] bytes) {
+        void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
 
@@ -329,7 +350,7 @@ public class BluetoothService extends Service {
         }
 
         // Call this method from the main activity to shut down the connection.
-        public void cancel() {
+        void cancel() {
             try {
                 mmSocket.close();
             } catch (IOException e) {

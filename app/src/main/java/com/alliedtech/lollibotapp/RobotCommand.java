@@ -1,12 +1,12 @@
 package com.alliedtech.lollibotapp;
 
-public enum RobotCommand {
-    COMMAND_MOVE_LINES,
-    COMMAND_BATTERY_STATUS,
-    COMMAND_ROBOT_STATUS,
-    COMMAND_UPDATE_SCHEDULE,
-    COMMAND_REMOVE_SCHEDULE,
-    COMMAND_SET_LINE_COUNT,
-    COMMAND_MOVE_TO_MIDDLE,
-    COMMAND_MOVE_FROM_MIDDLE
+public interface RobotCommand {
+    String COMMAND_MOVE_LINES = "mvl";
+    String COMMAND_BATTERY_STATUS = "btr";
+    String COMMAND_ROBOT_STATUS = "sts";
+    String COMMAND_UPDATE_SCHEDULE = "ups";
+    String COMMAND_REMOVE_SCHEDULE = "rms";
+    String COMMAND_SET_LINE_COUNT = "snl";
+    String COMMAND_MOVE_TO_MIDDLE = "mtm";
+    String COMMAND_MOVE_FROM_MIDDLE = "mfm";
 }
