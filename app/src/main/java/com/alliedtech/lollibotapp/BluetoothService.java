@@ -118,6 +118,14 @@ public class BluetoothService extends Service {
                     devicesNames.add(device.getName());
                     devicesMacs.add(device.getAddress());
                     deviceSignalStrength.add(rssi);
+
+                    Message msg = mHandler.obtainMessage(Constants.MESSAGE_NEW_DEVICE);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.DEVICE_NAME, device.getName());
+                    bundle.putString(Constants.DEVICE_MAC, device.getAddress());
+                    bundle.putInt(Constants.DEVICE_SIGNAL, rssi);
+                    msg.setData(bundle);
+                    mHandler.sendMessage(msg);
                 }
             }
         }

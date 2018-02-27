@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeActivity() {
-        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+        Intent intent = new Intent(MainActivity.this, DevicesListActivity.class);
         MainActivity.this.startActivity(intent);
     }
 
