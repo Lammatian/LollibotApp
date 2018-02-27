@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DevicesListActivity"></activity>
+        <activity android:name=".DevicesListActivity"/>
         <service android:name=".BluetoothService"/>
     </application>
 

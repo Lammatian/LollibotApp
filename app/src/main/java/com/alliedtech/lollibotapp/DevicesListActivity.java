@@ -46,7 +46,6 @@ public class DevicesListActivity extends AppCompatActivity {
                 //Can pass MAC address as Intent, since thats mostly what we all need for the EV3, UUID's will be same for all EV3 (We'll set it up to be)
             }
         });
-
     }
 
     @Override
@@ -55,12 +54,16 @@ public class DevicesListActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, BluetoothService.class);
         bindService(intent, mConnection, BIND_AUTO_CREATE);
+    }
 
+    private void onServiceConnected() {
+        startService(new Intent(this, BluetoothService.class));
         deviceMacs = mService.getDevicesMacs();
         deviceNames = mService.getDevicesNames();
         deviceScans = mService.getDevicesSignals();
 
         deviceListAdapter = new DeviceListAdapter(deviceNames, deviceMacs, deviceScans, this);
+        viewOfAllDevices.setAdapter(deviceListAdapter);
     }
 
     public void reScan(View v) {
@@ -114,6 +117,7 @@ public class DevicesListActivity extends AppCompatActivity {
             BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
             mService = mLocalBinder.getServerInstance();
             mService.setHandler(mHandler);
+            DevicesListActivity.this.onServiceConnected();
         }
     };
 }

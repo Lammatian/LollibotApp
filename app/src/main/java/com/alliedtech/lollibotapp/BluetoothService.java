@@ -64,6 +64,19 @@ public class BluetoothService extends Service {
     }
     //endregion
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        devicesNames = new ArrayList<>();
+        devicesMacs = new ArrayList<>();
+        deviceSignalStrength = new ArrayList<>();
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        context = getApplicationContext();
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -75,8 +88,6 @@ public class BluetoothService extends Service {
         // Let it continue running until it is stopped.
         Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
         mState = STATE_NONE;
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
-        context = getApplicationContext();
         scan();
 
         return START_STICKY;
