@@ -74,16 +74,17 @@ class BluetoothScanner {
 
     //Gets all bluetooth devices, and the blReceiver adds all the devices to the arraylist
     private void scan() {
-        Set<BluetoothDevice> btArrayList = btAdapter.getBondedDevices();
+        if (blueToothEnabled) {
+            Set<BluetoothDevice> btArrayList = btAdapter.getBondedDevices();
 
-        for (BluetoothDevice device : btArrayList) {
-            devicesNames.add(device.getName());
-            devicesMacs.add(device.getAddress());
-            deviceSignalStrength.add(100);
+            for (BluetoothDevice device : btArrayList) {
+                devicesNames.add(device.getName());
+                devicesMacs.add(device.getAddress());
+                deviceSignalStrength.add(100);
+            }
+            btAdapter.startDiscovery();
+            context.registerReceiver(blReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
         }
-       btAdapter.startDiscovery();
-       context.registerReceiver(blReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-
 
     }
 
