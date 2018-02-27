@@ -86,9 +86,8 @@ public class BluetoothService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Let it continue running until it is stopped.
-        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
-        mState = STATE_NONE;
         scan();
+        mHandler.obtainMessage(Constants.MESSAGE_SCANNED).sendToTarget();
 
         return START_STICKY;
     }
@@ -223,7 +222,8 @@ public class BluetoothService extends Service {
             t = mConnectedThread;
         }
 
-        t.write(("[" + command + "]").getBytes());
+//        t.write(("[" + command + "]").getBytes());
+        t.write(command.getBytes());
     }
 
     public void write(String command, String argument) {

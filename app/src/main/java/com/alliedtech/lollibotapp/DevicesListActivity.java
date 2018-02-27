@@ -57,6 +57,9 @@ public class DevicesListActivity extends AppCompatActivity {
 
     private void onServiceConnected() {
         startService(new Intent(this, BluetoothService.class));
+    }
+
+    public void showBondedDevices() {
         deviceMacs = mService.getDevicesMacs();
         deviceNames = mService.getDevicesNames();
         deviceScans = mService.getDevicesSignals();
@@ -85,7 +88,8 @@ public class DevicesListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             Activity activity = getParent();
             switch (msg.what) {
-                case 0:
+                case Constants.MESSAGE_SCANNED:
+                    showBondedDevices();
                     break;
                 case Constants.MESSAGE_STATE_CHANGE:
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
