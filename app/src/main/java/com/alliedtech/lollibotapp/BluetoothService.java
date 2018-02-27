@@ -222,8 +222,7 @@ public class BluetoothService extends Service {
             t = mConnectedThread;
         }
 
-//        t.write(("[" + command + "]").getBytes());
-        t.write(command.getBytes());
+        t.write(("[" + command + "]").getBytes());
     }
 
     public void write(String command, String argument) {
@@ -233,6 +232,7 @@ public class BluetoothService extends Service {
             if (mState != STATE_CONNECTED) return;
             t = mConnectedThread;
         }
+
         t.write(("[" + command + "*" + argument + "*]").getBytes());
     }
     //endregion

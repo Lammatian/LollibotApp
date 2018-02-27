@@ -1,5 +1,12 @@
 package com.alliedtech.lollibotapp;
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +22,10 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
+import android.widget.NumberPicker;
+import android.widget.Toast;
+
+import com.alliedtech.lollibotapp.decoration.MoveLinesFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +35,8 @@ import java.util.TreeMap;
 
 public class DeviceActivity extends AppCompatActivity {
 
+    boolean mBounded;
+    BluetoothService mService;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private AppBarLayout appBarLayout;
@@ -60,6 +73,54 @@ public class DeviceActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         setUpTabLayout(tabLayout);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, BluetoothService.class);
+        bindService(intent, mConnection, BIND_AUTO_CREATE);
+    }
+
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Activity activity = getParent();
+//            switch (msg.what) {
+//                case Constants.MESSAGE_SCANNED:
+//                    showBondedDevices();
+//                    break;
+//                case Constants.MESSAGE_STATE_CHANGE:
+//                    startActivity(new Intent(getApplicationContext(), DeviceActivity.class));
+//                    break;
+//                case Constants.MESSAGE_NEW_DEVICE:
+//                    addNewDevice(msg.getData());
+//                    break;
+//            }
+        }
+    };
+
+    ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Toast.makeText(DeviceActivity.this,
+                    "Service is disconnected",
+                    Toast.LENGTH_SHORT).show();
+            mBounded = false;
+            mService = null;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Toast.makeText(DeviceActivity.this,
+                    "Service is connected",
+                    Toast.LENGTH_SHORT).show();
+            mBounded = true;
+            BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
+            mService = mLocalBinder.getServerInstance();
+            mService.setHandler(mHandler);
+        }
+    };
 
     protected void animateFab(final int tab) {
         fabAddDay.clearAnimation();
@@ -124,6 +185,8 @@ public class DeviceActivity extends AppCompatActivity {
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();
         adapter.addFrag(statusFragment, "Status");
+        MoveLinesFragment moveLinesFragment = new MoveLinesFragment();
+        adapter.addFrag(moveLinesFragment, "Move lines");
         viewPager.setAdapter(adapter);
     }
 
@@ -225,6 +288,7 @@ public class DeviceActivity extends AppCompatActivity {
         if (dayScheduleFragment.isReady()) {
             allSchedules.put(dayScheduleFragment.getSchedule().getDate(), dayScheduleFragment.getSchedule());
             scheduleFragment.notifyDateSetChanged();
+            mService.write(RobotCommand.COMMAND_UPDATE_SCHEDULE, dayScheduleFragment.getSchedule().toString());
         }
 
         appBarLayout.setVisibility(View.VISIBLE);
@@ -237,6 +301,20 @@ public class DeviceActivity extends AppCompatActivity {
         fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
 
         addingDayToSchedule = !addingDayToSchedule;
+    }
+    //endregion
+
+    //TODO: Remove
+    //region Move lines
+    public void forward(View view) {
+        NumberPicker picker = findViewById(R.id.line_count);
+        mService.write(RobotCommand.COMMAND_MOVE_LINES, Integer.toString(picker.getValue()));
+    }
+
+    public void back(View view) {
+
+        NumberPicker picker = findViewById(R.id.line_count);
+        mService.write(RobotCommand.COMMAND_MOVE_LINES, Integer.toString(-picker.getValue()));
     }
     //endregion
 }

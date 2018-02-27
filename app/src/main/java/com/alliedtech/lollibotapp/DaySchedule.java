@@ -32,4 +32,15 @@ public class DaySchedule extends ArrayList<Run> {
     }
 
     public boolean isReady() { return date != null && !isEmpty() && get(size() - 1).isSetUp(); }
+
+    @Override
+    public String toString() {
+        String result = "<" + getFormattedDate() + "|";
+
+        for (Run r: this) {
+            result += "|" + r.getFormattedRun();
+        }
+
+        return result + ">";
+    }
 }
