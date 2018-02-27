@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), mService.getTest(), Toast.LENGTH_SHORT).show();
     }
 
-    public void changeActivity(View view) {
-        changeActivity();
+    public void move(View view) {
+        mService.write(RobotCommand.COMMAND_MOVE_LINES);
     }
 
     public void changeActivity() {

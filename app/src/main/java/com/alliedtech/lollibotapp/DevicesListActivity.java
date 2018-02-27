@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,8 +23,8 @@ public class DevicesListActivity extends AppCompatActivity {
     boolean mBounded;
     BluetoothService mService;
 
-    public static ListView viewOfAllDevices;
-    public static DeviceListAdapter deviceListAdapter;
+    public ListView viewOfAllDevices;
+    public DeviceListAdapter deviceListAdapter;
     ArrayList<String> deviceNames;
     ArrayList<String> deviceMacs;
     ArrayList<Integer> deviceScans;
@@ -42,8 +41,8 @@ public class DevicesListActivity extends AppCompatActivity {
 
         viewOfAllDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Can pass MAC address as Intent, since thats mostly what we all need for the EV3, UUID's will be same for all EV3 (We'll set it up to be)
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                mService.connect(position);
             }
         });
     }
@@ -88,8 +87,8 @@ public class DevicesListActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 0:
                     break;
-                case 1:
-                    Toast.makeText(getApplicationContext(), "Heyyy", Toast.LENGTH_SHORT);
+                case Constants.MESSAGE_STATE_CHANGE:
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     break;
                 case Constants.MESSAGE_NEW_DEVICE:
                     addNewDevice(msg.getData());

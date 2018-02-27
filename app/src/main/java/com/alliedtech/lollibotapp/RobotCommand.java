@@ -1,6 +1,7 @@
 package com.alliedtech.lollibotapp;
 
 public interface RobotCommand {
+    //TODO: Document describing protocol
     String COMMAND_MOVE_LINES = "mvl";
     String COMMAND_BATTERY_STATUS = "btr";
     String COMMAND_ROBOT_STATUS = "sts";

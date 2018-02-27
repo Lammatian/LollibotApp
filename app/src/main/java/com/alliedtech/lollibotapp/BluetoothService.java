@@ -64,7 +64,7 @@ public class BluetoothService extends Service {
     }
     //endregion
 
-
+    //region Overridden methods
     @Override
     public void onCreate() {
         super.onCreate();
@@ -98,6 +98,7 @@ public class BluetoothService extends Service {
         super.onDestroy();
         Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
     }
+    //endregion
 
     public void setHandler(Handler handler) {
         mHandler = handler;
@@ -143,6 +144,10 @@ public class BluetoothService extends Service {
     };
 
     private void scan() {
+        devicesNames = new ArrayList<>();
+        devicesMacs = new ArrayList<>();
+        deviceSignalStrength = new ArrayList<>();
+
         bondedDevices = new ArrayList<>(btAdapter.getBondedDevices());
 
         for (BluetoothDevice device : bondedDevices) {
@@ -165,6 +170,7 @@ public class BluetoothService extends Service {
             mConnectedThread.cancel();
             mConnectedThread = null;
         }
+
         mConnectThread = new ConnectThread(bondedDevices.get(index));
         mConnectThread.start();
     }
@@ -208,7 +214,8 @@ public class BluetoothService extends Service {
     }
     //endregion
 
-    public void write(RobotCommand command) {
+    //region Sending data
+    public void write(String command) {
         ConnectedThread t;
 
         synchronized (this) {
@@ -219,7 +226,7 @@ public class BluetoothService extends Service {
         t.write(("[" + command + "]").getBytes());
     }
 
-    public void write(RobotCommand command, String argument) {
+    public void write(String command, String argument) {
         ConnectedThread t;
 
         synchronized (this) {
@@ -228,13 +235,15 @@ public class BluetoothService extends Service {
         }
         t.write(("[" + command + "*" + argument + "*]").getBytes());
     }
+    //endregion
 
-    //region Establishing connection thread
+    //region Connect thread
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
 
         ConnectThread(BluetoothDevice device) {
+            //TODO: Pairing
             // Use a temporary object that is later assigned to mmSocket
             // because mmSocket is final.
             BluetoothSocket tmp = null;
@@ -275,6 +284,7 @@ public class BluetoothService extends Service {
                 mConnectThread = null;
             }
 
+            Log.d(TAG, "Connected to " + mmSocket.toString());
             connected(mmSocket, mmDevice);
         }
 
@@ -289,7 +299,7 @@ public class BluetoothService extends Service {
     }
     //endregion
 
-    //region Managing connection thread
+    //region Connected thread
     // Defines several constants used when transmitting messages between the
     // service and the UI.
     private interface MessageConstants {
