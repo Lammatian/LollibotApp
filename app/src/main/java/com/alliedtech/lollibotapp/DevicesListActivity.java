@@ -92,7 +92,7 @@ public class DevicesListActivity extends AppCompatActivity {
                     showBondedDevices();
                     break;
                 case Constants.MESSAGE_STATE_CHANGE:
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    startActivity(new Intent(getApplicationContext(), DeviceActivity.class));
                     break;
                 case Constants.MESSAGE_NEW_DEVICE:
                     addNewDevice(msg.getData());
