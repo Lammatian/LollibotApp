@@ -95,7 +95,9 @@ public class BluetoothService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
+
+        btReceiver.abortBroadcast();
+        btAdapter.disable();
     }
     //endregion
 

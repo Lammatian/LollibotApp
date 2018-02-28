@@ -55,6 +55,13 @@ public class DevicesListActivity extends AppCompatActivity {
         bindService(intent, mConnection, BIND_AUTO_CREATE);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unbindService(mConnection);
+    }
+
     private void onServiceConnected() {
         startService(new Intent(this, BluetoothService.class));
     }
