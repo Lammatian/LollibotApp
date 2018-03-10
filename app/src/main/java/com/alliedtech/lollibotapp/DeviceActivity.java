@@ -1,6 +1,5 @@
 package com.alliedtech.lollibotapp;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -32,8 +31,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DeviceActivity extends AppCompatActivity {
+
+    //region Variables
+    private interface MessageConstants {
+        int MESSAGE_READ = 0;
+        int MESSAGE_WRITE = 1;
+    }
 
     boolean mBounded;
     BluetoothService mService;
@@ -45,7 +52,9 @@ public class DeviceActivity extends AppCompatActivity {
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
     private boolean addingDayToSchedule = false;
+    //endregion
 
+    //region On start/create/destroy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,12 +97,32 @@ public class DeviceActivity extends AppCompatActivity {
 
         unbindService(mConnection);
     }
+    //endregion
+
+    //region Bluetooth handling
+    private void handleMessageFromRobot(String data) {
+        Pattern pattern = Pattern.compile("^\\[(...)(\\*(.*)\\*)?\\]$");
+        Matcher matcher = pattern.matcher(data);
+        String command = matcher.group(1);
+        String argument = matcher.group(3);
+
+        switch (command) {
+            case RobotCommand.COMMAND_BATTERY_STATUS_UPDATE:
+                break;
+            case RobotCommand.COMMAND_STATE_CHANGE:
+                break;
+            case RobotCommand.COMMAND_WARNING:
+                break;
+        }
+    }
 
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Activity activity = getParent();
-//            switch (msg.what) {
+            switch (msg.what) {
+                case MessageConstants.MESSAGE_READ:
+                    handleMessageFromRobot((String)msg.obj);
+                    break;
 //                case Constants.MESSAGE_SCANNED:
 //                    showBondedDevices();
 //                    break;
@@ -103,7 +132,7 @@ public class DeviceActivity extends AppCompatActivity {
 //                case Constants.MESSAGE_NEW_DEVICE:
 //                    addNewDevice(msg.getData());
 //                    break;
-//            }
+            }
         }
     };
 
@@ -128,7 +157,9 @@ public class DeviceActivity extends AppCompatActivity {
             mService.setHandler(mHandler);
         }
     };
+    //endregion
 
+    //region Floating action button animations
     protected void animateFab(final int tab) {
         fabAddDay.clearAnimation();
 
@@ -157,7 +188,9 @@ public class DeviceActivity extends AppCompatActivity {
 
         fabAddDay.startAnimation(shrink);
     }
+    //endregion
 
+    //region Returning from daily schedule
     @Override
     public void onBackPressed() {
         if (addingDayToSchedule) {
@@ -173,6 +206,7 @@ public class DeviceActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+    //endregion
 
     //region Tabs Handling
     // Setting View Pager
@@ -231,6 +265,7 @@ public class DeviceActivity extends AppCompatActivity {
     }
     //endregion
 
+    //region UI setup
     private void setUpFabAddDay(AnimatedFloatingActionButton fabAddDay) {
         fabAddDay.setUpDrawables(new View.OnClickListener() {
             @Override
@@ -269,6 +304,7 @@ public class DeviceActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) { }
         });
     }
+    //endregion
 
     //region Daily schedule open/close
     private void openDailySchedule(int position) {

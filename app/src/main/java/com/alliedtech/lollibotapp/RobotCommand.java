@@ -10,4 +10,7 @@ public interface RobotCommand {
     String COMMAND_SET_LINE_COUNT = "snl";
     String COMMAND_MOVE_TO_MIDDLE = "mtm";
     String COMMAND_MOVE_FROM_MIDDLE = "mfm";
+    String COMMAND_BATTERY_STATUS_UPDATE = "bsu";
+    String COMMAND_STATE_CHANGE = "stc";
+    String COMMAND_WARNING = "wng";
 }
