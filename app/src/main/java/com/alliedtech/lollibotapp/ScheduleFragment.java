@@ -24,6 +24,7 @@ public class ScheduleFragment extends Fragment {
     private TreeMap<Date, DaySchedule> daySchedules;
     private ScheduleAdapter scheduleAdapter;
     private AdapterView.OnItemClickListener onItemClickListener;
+    private AdapterView.OnItemLongClickListener onItemLongClickListener;
 
     @Nullable
     @Override
@@ -43,6 +44,11 @@ public class ScheduleFragment extends Fragment {
     // There is definitely a better way to achieve this but that's all I came up with
     public void bindOnItemClickListener(AdapterView.OnItemClickListener listener) {
         onItemClickListener = listener;
+    }
+
+    // There is definitely a better way to achieve this but that's all I came up with
+    public void bindOnItemLongClickListener(AdapterView.OnItemLongClickListener listener) {
+        onItemLongClickListener = listener;
     }
 
     private void setTodayView() {
@@ -80,6 +86,7 @@ public class ScheduleFragment extends Fragment {
         scheduleAdapter = new ScheduleAdapter(getActivity(), getContext(), daySchedules);
         gridView.setAdapter(scheduleAdapter);
         gridView.setOnItemClickListener(onItemClickListener);
+        gridView.setOnItemLongClickListener(onItemLongClickListener);
     }
 
     public void notifyDateSetChanged() {

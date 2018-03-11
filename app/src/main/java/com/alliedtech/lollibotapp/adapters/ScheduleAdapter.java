@@ -2,7 +2,10 @@ package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +25,8 @@ public class ScheduleAdapter extends BaseAdapter {
     private TreeMap<Date, DaySchedule> scheduled_days;
     private LayoutInflater inflater;
     private Date mapKeys[];
+    private long startTime = 0;
+    private long endTime = 0;
 
     public ScheduleAdapter(Activity activity, Context context, TreeMap<Date, DaySchedule> days) {
         mContext = context;
@@ -43,9 +48,9 @@ public class ScheduleAdapter extends BaseAdapter {
     }
 
     // create a new view for each item referenced by the Adapter
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        DaySchedule daySchedule = getItem(position);
+        final DaySchedule daySchedule = getItem(position);
 
         ScheduleDayViewHolder scheduleDayViewHolder;
 
@@ -59,6 +64,36 @@ public class ScheduleAdapter extends BaseAdapter {
         else {
             scheduleDayViewHolder = (ScheduleDayViewHolder)convertView.getTag();
         }
+
+//        view.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent ev) {
+//                if(ev.getAction() == MotionEvent.ACTION_DOWN){
+//                    //record the start time
+//                    Log.d("Touch", "Moved down");
+//                    startTime = ev.getEventTime();
+//                }
+//                else if(ev.getAction() == MotionEvent.ACTION_UP){
+//                    //record the end time
+//                    Log.d("Touch", "Moved up");
+//                    endTime = ev.getEventTime();
+//                }
+//
+//                //verify
+//                if(endTime - startTime > 1000){
+//                    Log.d("Touch", Long.toString(endTime - startTime));
+//                    //we have a 1000ms duration touch
+//                    //propagate your own event
+//                    Date[] keys = scheduled_days.keySet().toArray(new Date[scheduled_days.keySet().size()]);
+//                    scheduled_days.remove(keys[position]);
+//                    notifyDataSetChanged();
+//
+//                    return false; //notify that you handled this event (do not propagate)
+//                }
+//
+//                return true; //propagate to enable drag
+//            }
+//        });
 
         scheduleDayViewHolder.date.setText(daySchedule.getFormattedDate());
         String scheduledItemsText;

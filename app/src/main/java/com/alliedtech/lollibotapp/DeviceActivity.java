@@ -13,15 +13,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alliedtech.lollibotapp.decoration.MoveLinesFragment;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -108,10 +112,19 @@ public class DeviceActivity extends AppCompatActivity {
 
         switch (command) {
             case RobotCommand.COMMAND_BATTERY_STATUS_UPDATE:
+                TextView batteryLevel = findViewById(R.id.battery_level);
+                double battery = Double.parseDouble(argument);
+                batteryLevel.setText(String.format(Locale.ENGLISH, "%d%%", (int)(100 * battery/Constants.MAX_VOLTAGE)));
                 break;
             case RobotCommand.COMMAND_STATE_CHANGE:
+                TextView currentOperation = findViewById(R.id.current_operation);
+                currentOperation.setText(argument);
                 break;
             case RobotCommand.COMMAND_WARNING:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Warning");
+                builder.setMessage(argument);
+                builder.show();
                 break;
         }
     }
@@ -123,15 +136,6 @@ public class DeviceActivity extends AppCompatActivity {
                 case MessageConstants.MESSAGE_READ:
                     handleMessageFromRobot((String)msg.obj);
                     break;
-//                case Constants.MESSAGE_SCANNED:
-//                    showBondedDevices();
-//                    break;
-//                case Constants.MESSAGE_STATE_CHANGE:
-//                    startActivity(new Intent(getApplicationContext(), DeviceActivity.class));
-//                    break;
-//                case Constants.MESSAGE_NEW_DEVICE:
-//                    addNewDevice(msg.getData());
-//                    break;
             }
         }
     };
@@ -211,18 +215,28 @@ public class DeviceActivity extends AppCompatActivity {
     //region Tabs Handling
     // Setting View Pager
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        final ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 openDailySchedule(position);
             }
         };
+        AdapterView.OnItemLongClickListener onItemLongClickListener= new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Date[] keys = allSchedules.keySet().toArray(new Date[allSchedules.keySet().size()]);
+                allSchedules.remove(keys[position]);
+                scheduleFragment.notifyDateSetChanged();
+                return true;
+            }
+        };
         scheduleFragment = new ScheduleFragment();
         // Fragments are stupid and cannot be instantiated with arguments so we have to bind them
         scheduleFragment.bind(allSchedules);
-        // Set the item click listener to open the correct item's daily schedule
+        // Set the item click listeners to open the correct item's daily schedule
         scheduleFragment.bindOnItemClickListener(onItemClickListener);
+        scheduleFragment.bindOnItemLongClickListener(onItemLongClickListener);
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();
         adapter.addFrag(statusFragment, "Status");

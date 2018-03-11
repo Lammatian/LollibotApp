@@ -1,4 +1,4 @@
-package com.alliedtech.lollibotapp;
+package com.alliedtech.lollibotapp.adapters;
 
 //Adapter for Listview for devices
 
@@ -15,6 +15,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+
+import com.alliedtech.lollibotapp.R;
 
 import java.util.ArrayList;
 

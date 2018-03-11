@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.alliedtech.lollibotapp.adapters.DeviceListAdapter;
+
 import java.util.ArrayList;
 
 //Home Screen Activity, looks very basic atm but it'll be better
