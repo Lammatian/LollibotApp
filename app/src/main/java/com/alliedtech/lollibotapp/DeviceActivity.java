@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.alliedtech.lollibotapp.decoration.MoveLinesFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -227,6 +228,8 @@ public class DeviceActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Date[] keys = allSchedules.keySet().toArray(new Date[allSchedules.keySet().size()]);
                 allSchedules.remove(keys[position]);
+                mService.write(RobotCommand.COMMAND_REMOVE_SCHEDULE,
+                        new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(keys[position]));
                 scheduleFragment.notifyDateSetChanged();
                 return true;
             }
