@@ -6,14 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.NumberPicker;
 
 import com.alliedtech.lollibotapp.R;
-
-/**
- * Created by mateusz on 27/02/18.
- */
 
 public class MoveLinesFragment extends Fragment {
 
