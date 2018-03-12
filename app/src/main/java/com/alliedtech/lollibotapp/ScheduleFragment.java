@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TreeMap;

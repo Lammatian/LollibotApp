@@ -2,10 +2,7 @@ package com.alliedtech.lollibotapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,7 +11,6 @@ import android.widget.TextView;
 import com.alliedtech.lollibotapp.R;
 import com.alliedtech.lollibotapp.DaySchedule;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TreeMap;

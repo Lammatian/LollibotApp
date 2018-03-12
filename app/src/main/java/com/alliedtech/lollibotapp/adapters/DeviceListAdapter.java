@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.constraint.solver.widgets.Rectangle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -20,6 +20,5 @@ public interface Constants {
     String TOAST = "toast";
 
     // Battery level
-    // TODO: Change to proper battery level
-    double MAX_VOLTAGE = 8.3;
+    double MAX_VOLTAGE = 8.33;
 }
