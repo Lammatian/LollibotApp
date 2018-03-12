@@ -355,7 +355,7 @@ public class BluetoothService extends Service {
                     // Send the obtained bytes to the UI activity as string.
                     Message readMsg = mHandler.obtainMessage(
                             MessageConstants.MESSAGE_READ, numBytes, -1,
-                            new String(mmBuffer, "UTF-8"));
+                            new String(mmBuffer, 0, numBytes, "UTF-8"));
                     readMsg.sendToTarget();
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);

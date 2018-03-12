@@ -12,15 +12,12 @@ import com.alliedtech.lollibotapp.R;
 
 public class MoveLinesFragment extends Fragment {
 
-    private View view;
-    private NumberPicker np;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.movelines_fragment, container, false);
+        View view = inflater.inflate(R.layout.movelines_fragment, container, false);
 
-        np = view.findViewById(R.id.line_count);
+        NumberPicker np = view.findViewById(R.id.line_count);
         np.setMinValue(0);
         np.setMaxValue(5);
 

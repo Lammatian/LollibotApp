@@ -66,13 +66,17 @@ public class DeviceActivity extends AppCompatActivity {
 
         allSchedules = new TreeMap<>();
         //region Professional schedule testing
-        Calendar date = Calendar.getInstance();
-        ArrayList<Date> dates = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            dates.add(date.getTime());
-            date.add(Calendar.DATE, 1);
-            allSchedules.put(dates.get(i), new DaySchedule(dates.get(i)));
-        }
+//        Calendar date = Calendar.getInstance();
+//        ArrayList<Date> dates = new ArrayList<>();
+//        for (int i = 0; i < 3; i++) {
+//            dates.add(date.getTime());
+//            date.add(Calendar.DATE, 1);
+//            DaySchedule daySchedule = new DaySchedule(dates.get(i));
+//            for (int j = 0; j < 20; j++) {
+//                daySchedule.add(new Run(date.getTime(), date.getTime()));
+//            }
+//            allSchedules.put(dates.get(i), daySchedule);
+//        }
         //endregion
 
         appBarLayout = findViewById(R.id.appBarLayout);
@@ -106,7 +110,9 @@ public class DeviceActivity extends AppCompatActivity {
     //region Bluetooth handling
     private void handleMessageFromRobot(String data) {
         Pattern commandPattern = Pattern.compile("^\\[(...)(\\*(.*)\\*)?\\]$");
+        Log.d("Received command", data);
         Matcher commandMatcher = commandPattern.matcher(data);
+        commandMatcher.matches();
         String command = commandMatcher.group(1);
         String argument = commandMatcher.group(3);
 
@@ -138,6 +144,7 @@ public class DeviceActivity extends AppCompatActivity {
                 Toast.makeText(DeviceActivity.this,
                         "Schedule updated",
                         Toast.LENGTH_LONG).show();
+                scheduleFragment.notifyDateSetChanged();
                 break;
         }
     }
