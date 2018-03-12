@@ -106,26 +106,39 @@ public class DeviceActivity extends AppCompatActivity {
 
     //region Bluetooth handling
     private void handleMessageFromRobot(String data) {
-        Pattern pattern = Pattern.compile("^\\[(...)(\\*(.*)\\*)?\\]$");
-        Matcher matcher = pattern.matcher(data);
-        String command = matcher.group(1);
-        String argument = matcher.group(3);
+        Pattern commandPattern = Pattern.compile("^\\[(...)(\\*(.*)\\*)?\\]$");
+        Matcher commandMatcher = commandPattern.matcher(data);
+        String command = commandMatcher.group(1);
+        String argument = commandMatcher.group(3);
 
         switch (command) {
-            case RobotCommand.COMMAND_BATTERY_STATUS_UPDATE:
+            case RobotCommand.IN_COMMAND_BATTERY_STATUS_UPDATE:
                 TextView batteryLevel = findViewById(R.id.battery_level);
                 double battery = Double.parseDouble(argument);
                 batteryLevel.setText(String.format(Locale.ENGLISH, "%d%%", (int)(100 * battery/Constants.MAX_VOLTAGE)));
                 break;
-            case RobotCommand.COMMAND_STATE_CHANGE:
+            case RobotCommand.IN_COMMAND_STATE_CHANGE:
                 TextView currentOperation = findViewById(R.id.current_operation);
                 currentOperation.setText(argument);
                 break;
-            case RobotCommand.COMMAND_WARNING:
+            case RobotCommand.IN_COMMAND_WARNING:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Warning");
                 builder.setMessage(argument);
                 builder.show();
+                break;
+            case RobotCommand.IN_COMMAND_SCHEDULE_START:
+                Toast.makeText(DeviceActivity.this,
+                        "Updating the schedule",
+                        Toast.LENGTH_LONG).show();
+                break;
+            case RobotCommand.IN_COMMAND_SCHEDULE_DAY:
+                allSchedules.put(new DaySchedule(argument).getDate(), new DaySchedule(argument));
+                break;
+            case RobotCommand.IN_COMMAND_SCHEDULE_END:
+                Toast.makeText(DeviceActivity.this,
+                        "Schedule updated",
+                        Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -228,7 +241,7 @@ public class DeviceActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 Date[] keys = allSchedules.keySet().toArray(new Date[allSchedules.keySet().size()]);
                 allSchedules.remove(keys[position]);
-                mService.write(RobotCommand.COMMAND_REMOVE_SCHEDULE,
+                mService.write(RobotCommand.OUT_COMMAND_REMOVE_SCHEDULE,
                         new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(keys[position]));
                 scheduleFragment.notifyDateSetChanged();
                 return true;
@@ -348,7 +361,7 @@ public class DeviceActivity extends AppCompatActivity {
         if (dayScheduleFragment.isReady()) {
             allSchedules.put(dayScheduleFragment.getSchedule().getDate(), dayScheduleFragment.getSchedule());
             scheduleFragment.notifyDateSetChanged();
-            mService.write(RobotCommand.COMMAND_UPDATE_SCHEDULE, dayScheduleFragment.getSchedule().toString());
+            mService.write(RobotCommand.OUT_COMMAND_UPDATE_SCHEDULE, dayScheduleFragment.getSchedule().toString());
         }
 
         appBarLayout.setVisibility(View.VISIBLE);
@@ -368,13 +381,13 @@ public class DeviceActivity extends AppCompatActivity {
     //region Move lines
     public void forward(View view) {
         NumberPicker picker = findViewById(R.id.line_count);
-        mService.write(RobotCommand.COMMAND_MOVE_LINES, Integer.toString(picker.getValue()));
+        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, Integer.toString(picker.getValue()));
     }
 
     public void back(View view) {
 
         NumberPicker picker = findViewById(R.id.line_count);
-        mService.write(RobotCommand.COMMAND_MOVE_LINES, Integer.toString(-picker.getValue()));
+        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, Integer.toString(-picker.getValue()));
     }
     //endregion
 }

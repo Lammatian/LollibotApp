@@ -27,6 +27,7 @@ public class DevicesListActivity extends AppCompatActivity {
 
     public ListView viewOfAllDevices;
     public DeviceListAdapter deviceListAdapter;
+    private boolean connected = false;
     ArrayList<String> deviceNames;
     ArrayList<String> deviceMacs;
     ArrayList<Integer> deviceScans;
@@ -77,8 +78,7 @@ public class DevicesListActivity extends AppCompatActivity {
         viewOfAllDevices.setAdapter(deviceListAdapter);
     }
 
-    public void reScan(View v) {
-    }
+    public void reScan(View v) { }
 
     public void addNewDevice(Bundle data) {
         String name = data.getString(Constants.DEVICE_NAME);
@@ -95,7 +95,6 @@ public class DevicesListActivity extends AppCompatActivity {
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Activity activity = getParent();
             switch (msg.what) {
                 case Constants.MESSAGE_SCANNED:
                     showBondedDevices();
@@ -103,6 +102,7 @@ public class DevicesListActivity extends AppCompatActivity {
                 case Constants.MESSAGE_STATE_CHANGE:
                     if (msg.arg1 == 2)
                         startActivity(new Intent(getApplicationContext(), DeviceActivity.class));
+                        connected = true;
                     break;
                 case Constants.MESSAGE_NEW_DEVICE:
                     addNewDevice(msg.getData());

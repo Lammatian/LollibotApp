@@ -26,7 +26,7 @@ public class Run {
         endDate = date;
     }
 
-    public String getFormattedRun() {
+    String getFormattedRun() {
         return simpleDateFormat.format(getStartDate()) + "-" + simpleDateFormat.format(getEndDate());
     }
 
