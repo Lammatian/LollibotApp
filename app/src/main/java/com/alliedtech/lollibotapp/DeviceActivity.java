@@ -30,10 +30,11 @@ import com.alliedtech.lollibotapp.decoration.MoveLinesFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,6 +57,7 @@ public class DeviceActivity extends AppCompatActivity {
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
     private boolean addingDayToSchedule = false;
+    private final Handler timeHandler = new Handler();
     //endregion
 
     //region On start/create/destroy
@@ -119,8 +121,10 @@ public class DeviceActivity extends AppCompatActivity {
         switch (command) {
             case RobotCommand.IN_COMMAND_BATTERY_STATUS_UPDATE:
                 TextView batteryLevel = findViewById(R.id.battery_level);
-                double battery = Double.parseDouble(argument);
-                batteryLevel.setText(String.format(Locale.ENGLISH, "%d%%", (int)(100 * battery/Constants.MAX_VOLTAGE)));
+                int battery = Integer.parseInt(argument);
+                batteryLevel.setText(String.format(Locale.ENGLISH,
+                        "%d%%",
+                        getBatteryPercentage(battery)));
                 break;
             case RobotCommand.IN_COMMAND_STATE_CHANGE:
                 TextView currentOperation = findViewById(R.id.current_operation);
@@ -180,6 +184,18 @@ public class DeviceActivity extends AppCompatActivity {
             mService = mLocalBinder.getServerInstance();
             mService.setHandler(mHandler);
             mService.write(RobotCommand.OUT_COMMAND_GET_SCHEDULE);
+
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    timeHandler.post(new Runnable() {
+                        public void run() {
+                            mService.write(RobotCommand.OUT_COMMAND_BATTERY_STATUS);
+                        }
+                    });
+                }
+            },Constants.BATTERY_UPDATE_DELAY, Constants.BATTERY_UPDATE_PERIOD);
         }
     };
     //endregion
@@ -381,6 +397,14 @@ public class DeviceActivity extends AppCompatActivity {
         fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
 
         addingDayToSchedule = !addingDayToSchedule;
+    }
+    //endregion
+
+    //region Helper methods
+    private int getBatteryPercentage(int reading) {
+        double a = 100/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+        double b = -(Constants.MIN_VOLTAGE*100)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+        return (int)(a*reading + b);
     }
     //endregion
 
