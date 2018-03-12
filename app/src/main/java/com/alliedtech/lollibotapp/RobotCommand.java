@@ -7,6 +7,7 @@ public interface RobotCommand {
     String OUT_COMMAND_ROBOT_STATUS = "sts";
     String OUT_COMMAND_UPDATE_SCHEDULE = "ups";
     String OUT_COMMAND_REMOVE_SCHEDULE = "rms";
+    String OUT_COMMAND_GET_SCHEDULE = "gts";
     String OUT_COMMAND_SET_LINE_COUNT = "snl";
     String OUT_COMMAND_MOVE_TO_MIDDLE = "mtm";
     String OUT_COMMAND_MOVE_FROM_MIDDLE = "mfm";

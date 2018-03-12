@@ -18,8 +18,6 @@ import com.alliedtech.lollibotapp.adapters.DeviceListAdapter;
 
 import java.util.ArrayList;
 
-//Home Screen Activity, looks very basic atm but it'll be better
-
 public class DevicesListActivity extends AppCompatActivity {
 
     boolean mBounded;
@@ -27,7 +25,6 @@ public class DevicesListActivity extends AppCompatActivity {
 
     public ListView viewOfAllDevices;
     public DeviceListAdapter deviceListAdapter;
-    private boolean connected = false;
     ArrayList<String> deviceNames;
     ArrayList<String> deviceMacs;
     ArrayList<Integer> deviceScans;
@@ -102,7 +99,6 @@ public class DevicesListActivity extends AppCompatActivity {
                 case Constants.MESSAGE_STATE_CHANGE:
                     if (msg.arg1 == 2)
                         startActivity(new Intent(getApplicationContext(), DeviceActivity.class));
-                        connected = true;
                     break;
                 case Constants.MESSAGE_NEW_DEVICE:
                     addNewDevice(msg.getData());

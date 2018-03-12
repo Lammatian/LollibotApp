@@ -173,6 +173,7 @@ public class DeviceActivity extends AppCompatActivity {
             BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
             mService = mLocalBinder.getServerInstance();
             mService.setHandler(mHandler);
+            mService.write(RobotCommand.OUT_COMMAND_GET_SCHEDULE);
         }
     };
     //endregion
