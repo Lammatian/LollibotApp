@@ -195,7 +195,7 @@ public class DeviceActivity extends AppCompatActivity {
                         }
                     });
                 }
-            },Constants.BATTERY_UPDATE_DELAY, Constants.BATTERY_UPDATE_PERIOD);
+            }, Constants.BATTERY_UPDATE_DELAY, Constants.BATTERY_UPDATE_PERIOD);
         }
     };
     //endregion
@@ -403,9 +403,7 @@ public class DeviceActivity extends AppCompatActivity {
     //region Helper methods
     private int getBatteryPercentage(int reading) {
         //TODO: Get more accurate reading, especially close to min value
-        double a = 100/(Constants.MAX_VOLTAGE - Math.max(Constants.MIN_VOLTAGE, reading));
-        double b = -(Constants.MIN_VOLTAGE*100)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
-        return (int)(a*reading + b);
+        return 100*(reading - Constants.MIN_VOLTAGE)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
     }
     //endregion
 

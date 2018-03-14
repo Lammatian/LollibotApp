@@ -20,8 +20,8 @@ public interface Constants {
     String TOAST = "toast";
 
     // Battery level
-    double MAX_VOLTAGE = 8330000;
-    double MIN_VOLTAGE = 6600000;
-    int BATTERY_UPDATE_PERIOD = 5*60*1000;
+    int MAX_VOLTAGE = 8330000;
+    int MIN_VOLTAGE = 6600000;
+    int BATTERY_UPDATE_PERIOD = 30*1000;
     int BATTERY_UPDATE_DELAY = 5*1000;
 }
