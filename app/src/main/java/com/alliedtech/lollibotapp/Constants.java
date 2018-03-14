@@ -21,7 +21,7 @@ public interface Constants {
 
     // Battery level
     double MAX_VOLTAGE = 8330000;
-    double MIN_VOLTAGE = 5744800;
+    double MIN_VOLTAGE = 6600000;
     int BATTERY_UPDATE_PERIOD = 5*60*1000;
     int BATTERY_UPDATE_DELAY = 5*1000;
 }

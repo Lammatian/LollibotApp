@@ -402,7 +402,8 @@ public class DeviceActivity extends AppCompatActivity {
 
     //region Helper methods
     private int getBatteryPercentage(int reading) {
-        double a = 100/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+        //TODO: Get more accurate reading, especially close to min value
+        double a = 100/(Constants.MAX_VOLTAGE - Math.max(Constants.MIN_VOLTAGE, reading));
         double b = -(Constants.MIN_VOLTAGE*100)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
         return (int)(a*reading + b);
     }
