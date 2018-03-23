@@ -279,8 +279,8 @@ public class DeviceActivity extends AppCompatActivity {
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();
         adapter.addFrag(statusFragment, "Status");
-        MoveLinesFragment moveLinesFragment = new MoveLinesFragment();
-        adapter.addFrag(moveLinesFragment, "Move lines");
+//        MoveLinesFragment moveLinesFragment = new MoveLinesFragment();
+//        adapter.addFrag(moveLinesFragment, "Move lines");
         viewPager.setAdapter(adapter);
     }
 
