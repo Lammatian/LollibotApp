@@ -26,6 +26,8 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alliedtech.lollibotapp.decoration.OverrideFragment;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,6 +54,7 @@ public class DeviceActivity extends AppCompatActivity {
     private AppBarLayout appBarLayout;
     private AnimatedFloatingActionButton fabAddDay;
     private DailyScheduleFragment dayScheduleFragment;
+    private OverrideFragment overrideFragment;
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
     private boolean addingDayToSchedule = false;
@@ -112,6 +115,7 @@ public class DeviceActivity extends AppCompatActivity {
         Pattern commandPattern = Pattern.compile("^\\[(...)(\\*(.*)\\*)?\\]$");
         Log.d("Received command", data);
         Matcher commandMatcher = commandPattern.matcher(data);
+        // Make pattern matching actually work
         commandMatcher.matches();
         String command = commandMatcher.group(1);
         String argument = commandMatcher.group(3);
@@ -387,6 +391,21 @@ public class DeviceActivity extends AppCompatActivity {
         fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
 
         addingDayToSchedule = !addingDayToSchedule;
+    }
+    //endregion
+
+    //region Override
+    public void override(View view) {
+        // TODO: Implement functionality of override methods
+        // TODO: Implement a way to get back from override (probably FAB)
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        appBarLayout.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        overrideFragment = new OverrideFragment();
+        fragmentTransaction.replace(R.id.fragment_container, overrideFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
     //endregion
 

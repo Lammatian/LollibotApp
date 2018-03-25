@@ -47,6 +47,7 @@
                 android:textAlignment="center" />
 
             <EditText
+                android:id="@+id/number_of_lines"
                 android:layout_row="1"
                 android:layout_column="0"
                 android:layout_rowSpan="2"
@@ -57,6 +58,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/edit_text_border"
                 android:text="0"
+                android:maxLength="1"
                 android:textSize="50sp"
                 android:textAlignment="center"/>
 
