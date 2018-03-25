@@ -4,6 +4,8 @@ package com.alliedtech.lollibotapp;
 public interface Constants {
     // Message types sent from the BluetoothChatService Handler
     int MESSAGE_CONNECTED = 0;
+    int MESSAGE_DISCONNECTED = -1;
+    int MESSAGE_CONNECTION_FAILED = -2;
     int MESSAGE_STATE_CHANGE = 1;
     int MESSAGE_SCANNED = 2;
     int MESSAGE_WRITE = 3;

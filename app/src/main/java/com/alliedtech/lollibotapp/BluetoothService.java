@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 //TODO: Fix handler messages mess
-//TODO: Fix mess in general
 //TODO: Documentation
 public class BluetoothService extends Service {
 
@@ -45,23 +44,6 @@ public class BluetoothService extends Service {
     public static final int STATE_CONNECTING = 1; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 2;  // now connected to a remote device
     private int mState;
-
-    //region Testing
-    private String test = "test1";
-
-    public String getTest() {
-        return test;
-    }
-
-    public void change() {
-        test = (test.equals("test1")) ? "test2" : "test1";
-        Message msg = new Message();
-        Bundle data = new Bundle();
-        data.putInt("Ayyy", 0);
-        msg.setData(data);
-        mHandler.sendMessage(msg);
-    }
-    //endregion
 
     //region Overridden methods
     @Override
@@ -122,6 +104,7 @@ public class BluetoothService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            // TODO: This doesn't really do anything at the moment
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // Signal Strength measured in dBm (the higher the better)
@@ -192,11 +175,9 @@ public class BluetoothService extends Service {
 
     //region Connection failure handlers
     public void connectionFailed() {
+        Log.d(TAG, "Connection failed");
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Unable to connect device");
-        msg.setData(bundle);
+        Message msg = mHandler.obtainMessage(Constants.MESSAGE_CONNECTION_FAILED);
         mHandler.sendMessage(msg);
 
         mState = STATE_NONE;
@@ -204,10 +185,7 @@ public class BluetoothService extends Service {
 
     public void connectionLost() {
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.TOAST, "Device connection was lost");
-        msg.setData(bundle);
+        Message msg = mHandler.obtainMessage(Constants.MESSAGE_DISCONNECTED);
         mHandler.sendMessage(msg);
 
         mState = STATE_NONE;
@@ -285,8 +263,14 @@ public class BluetoothService extends Service {
                 mConnectThread = null;
             }
 
-            Log.d(TAG, "Connected to " + mmSocket.toString());
-            connected(mmSocket, mmDevice);
+
+            if (mmSocket.isConnected()) {
+                Log.d(TAG, "Connected to " + mmSocket.toString());
+                connected(mmSocket, mmDevice);
+            }
+            else {
+                Log.d(TAG, "Connection failed");
+            }
         }
 
         // Closes the client socket and causes the thread to finish.

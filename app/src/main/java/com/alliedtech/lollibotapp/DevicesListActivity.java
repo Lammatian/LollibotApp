@@ -1,11 +1,13 @@
 package com.alliedtech.lollibotapp;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -88,6 +90,14 @@ public class DevicesListActivity extends AppCompatActivity {
         deviceListAdapter.notifyDataSetChanged();
     }
 
+    private void connectionFailedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Could not connect to the device");
+        builder.setTitle("Connection failed");
+        builder.setPositiveButton("OK", null);
+        builder.show();
+    }
+
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -102,6 +112,9 @@ public class DevicesListActivity extends AppCompatActivity {
                 case Constants.MESSAGE_NEW_DEVICE:
                     addNewDevice(msg.getData());
                     break;
+                case Constants.MESSAGE_CONNECTION_FAILED:
+                    connectionFailedDialog();
+                    break;
             }
         }
     };
@@ -109,18 +122,12 @@ public class DevicesListActivity extends AppCompatActivity {
     ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Toast.makeText(DevicesListActivity.this,
-                    "Service is disconnected",
-                    Toast.LENGTH_SHORT).show();
             mBounded = false;
             mService = null;
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Toast.makeText(DevicesListActivity.this,
-                    "Service is connected",
-                    Toast.LENGTH_SHORT).show();
             mBounded = true;
             BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
             mService = mLocalBinder.getServerInstance();

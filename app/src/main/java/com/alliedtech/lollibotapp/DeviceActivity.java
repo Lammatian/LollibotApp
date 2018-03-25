@@ -26,8 +26,6 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alliedtech.lollibotapp.decoration.MoveLinesFragment;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -137,9 +135,6 @@ public class DeviceActivity extends AppCompatActivity {
                 builder.show();
                 break;
             case RobotCommand.IN_COMMAND_SCHEDULE_START:
-                Toast.makeText(DeviceActivity.this,
-                        "Updating the schedule",
-                        Toast.LENGTH_LONG).show();
                 break;
             case RobotCommand.IN_COMMAND_SCHEDULE_DAY:
                 allSchedules.put(new DaySchedule(argument).getDate(), new DaySchedule(argument));
@@ -160,6 +155,9 @@ public class DeviceActivity extends AppCompatActivity {
                 case MessageConstants.MESSAGE_READ:
                     handleMessageFromRobot((String)msg.obj);
                     break;
+                case Constants.MESSAGE_DISCONNECTED:
+                    startActivity(new Intent(getApplicationContext(), DevicesListActivity.class));
+                    break;
             }
         }
     };
@@ -167,18 +165,12 @@ public class DeviceActivity extends AppCompatActivity {
     ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Toast.makeText(DeviceActivity.this,
-                    "Service is disconnected",
-                    Toast.LENGTH_SHORT).show();
             mBounded = false;
             mService = null;
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Toast.makeText(DeviceActivity.this,
-                    "Service is connected",
-                    Toast.LENGTH_SHORT).show();
             mBounded = true;
             BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
             mService = mLocalBinder.getServerInstance();
@@ -279,8 +271,6 @@ public class DeviceActivity extends AppCompatActivity {
         adapter.addFrag(scheduleFragment, "Schedule");
         StatusFragment statusFragment = new StatusFragment();
         adapter.addFrag(statusFragment, "Status");
-//        MoveLinesFragment moveLinesFragment = new MoveLinesFragment();
-//        adapter.addFrag(moveLinesFragment, "Move lines");
         viewPager.setAdapter(adapter);
     }
 
