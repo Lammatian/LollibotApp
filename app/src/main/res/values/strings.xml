@@ -16,4 +16,12 @@
     <string name="run_end_text">End</string>
     <string name="set_date">SET DATE</string>
     <string name="add_run">ADD RUN</string>
+    <string name="move">Move lines</string>
+    <string name="forward">Forward</string>
+    <string name="back">Back</string>
+    <string name="resume_schedule">Resume schedule</string>
+    <string name="shutdown">Shutdown</string>
+    <string name="status">Status</string>
+    <string name="zero">0</string>
+    <string name="no_of_lines">Number of lines</string>
 </resources>
