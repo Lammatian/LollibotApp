@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.alliedtech.lollibotapp.DaySchedule;
+import com.alliedtech.lollibotapp.R;
 import com.alliedtech.lollibotapp.adapters.ScheduleAdapter;
 
 import java.util.Date;

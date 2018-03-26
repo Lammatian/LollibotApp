@@ -1,4 +1,4 @@
-package com.alliedtech.lollibotapp.decoration;
+package com.alliedtech.lollibotapp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

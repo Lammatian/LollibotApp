@@ -26,10 +26,9 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alliedtech.lollibotapp.decoration.OverrideFragment;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -58,6 +57,7 @@ public class DeviceActivity extends AppCompatActivity {
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
     private boolean addingDayToSchedule = false;
+    private boolean inOverride = false;
     private final Handler timeHandler = new Handler();
     //endregion
 
@@ -179,7 +179,12 @@ public class DeviceActivity extends AppCompatActivity {
             BluetoothService.LocalBinder mLocalBinder = (BluetoothService.LocalBinder)service;
             mService = mLocalBinder.getServerInstance();
             mService.setHandler(mHandler);
-            mService.write(RobotCommand.OUT_COMMAND_GET_SCHEDULE);
+            // Send current date to EV3
+            // TODO: Change on EV3 to accept date on gsc command
+            SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:SS",
+                    Locale.ENGLISH);
+            mService.write(RobotCommand.OUT_COMMAND_GET_SCHEDULE,
+                    format.format(Calendar.getInstance()));
 
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
@@ -319,8 +324,10 @@ public class DeviceActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!addingDayToSchedule)
                     openDailySchedule(-1);
-                else
+                else if (!inOverride)
                     closeDailySchedule();
+                else
+                    closeOverride();
             }
         });
     }
@@ -395,7 +402,7 @@ public class DeviceActivity extends AppCompatActivity {
     //endregion
 
     //region Override
-    public void override(View view) {
+    public void openOverride(View view) {
         // TODO: Implement functionality of override methods
         // TODO: Implement a way to get back from override (probably FAB)
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -406,6 +413,27 @@ public class DeviceActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragment_container, overrideFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+
+        Log.d("Fab transition", "Transition from + to X");
+        fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
+
+        inOverride = !inOverride;
+    }
+
+    public void closeOverride() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        appBarLayout.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        overrideFragment = new OverrideFragment();
+        fragmentTransaction.replace(R.id.fragment_container, overrideFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+        Log.d("Fab transition", "Transition from X to +");
+        fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
+
+        inOverride = !inOverride;
     }
     //endregion
 

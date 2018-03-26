@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alliedtech.lollibotapp.R;
+
 public class StatusFragment extends Fragment {
 
     private View view;
