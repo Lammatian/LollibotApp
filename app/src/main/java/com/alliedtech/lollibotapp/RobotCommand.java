@@ -11,6 +11,8 @@ public interface RobotCommand {
     String OUT_COMMAND_SET_LINE_COUNT = "snl";
     String OUT_COMMAND_MOVE_TO_MIDDLE = "mtm";
     String OUT_COMMAND_MOVE_FROM_MIDDLE = "mfm";
+    String OUT_COMMAND_RESUME_SCHEDULE = "rss";
+    String OUT_COMMAND_SHUTDOWN = "sdn";
     String IN_COMMAND_BATTERY_STATUS_UPDATE = "bsu";
     String IN_COMMAND_STATE_CHANGE = "stc";
     String IN_COMMAND_WARNING = "wng";

@@ -22,7 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
-import android.widget.NumberPicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +56,7 @@ public class DeviceActivity extends AppCompatActivity {
     private OverrideFragment overrideFragment;
     private ScheduleFragment scheduleFragment;
     private TreeMap<Date, DaySchedule> allSchedules;
+    private String currentOp;
     private boolean addingDayToSchedule = false;
     private boolean inOverride = false;
     private final Handler timeHandler = new Handler();
@@ -68,19 +69,6 @@ public class DeviceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_device);
 
         allSchedules = new TreeMap<>();
-        //region Professional schedule testing
-//        Calendar date = Calendar.getInstance();
-//        ArrayList<Date> dates = new ArrayList<>();
-//        for (int i = 0; i < 3; i++) {
-//            dates.add(date.getTime());
-//            date.add(Calendar.DATE, 1);
-//            DaySchedule daySchedule = new DaySchedule(dates.get(i));
-//            for (int j = 0; j < 20; j++) {
-//                daySchedule.add(new Run(date.getTime(), date.getTime()));
-//            }
-//            allSchedules.put(dates.get(i), daySchedule);
-//        }
-        //endregion
 
         appBarLayout = findViewById(R.id.appBarLayout);
 
@@ -111,6 +99,18 @@ public class DeviceActivity extends AppCompatActivity {
     //endregion
 
     //region Bluetooth handling
+    private void setCurrentOperation(String operation) {
+        TextView currentOperation = findViewById(R.id.current_operation);
+        currentOperation.setText(operation);
+
+        if (inOverride) {
+            TextView currentOperationOverride = findViewById(R.id.current_status);
+            currentOperationOverride.setText(operation);
+        }
+
+        currentOp = operation;
+    }
+
     private void handleMessageFromRobot(String data) {
         Pattern commandPattern = Pattern.compile("^\\[(...)(\\*(.*)\\*)?\\]$");
         Log.d("Received command", data);
@@ -129,8 +129,7 @@ public class DeviceActivity extends AppCompatActivity {
                         getBatteryPercentage(battery)));
                 break;
             case RobotCommand.IN_COMMAND_STATE_CHANGE:
-                TextView currentOperation = findViewById(R.id.current_operation);
-                currentOperation.setText(argument);
+                setCurrentOperation(argument);
                 break;
             case RobotCommand.IN_COMMAND_WARNING:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -401,7 +400,7 @@ public class DeviceActivity extends AppCompatActivity {
     }
     //endregion
 
-    //region Override
+    //region Override open/close
     public void openOverride(View view) {
         // TODO: Implement functionality of override methods
         // TODO: Implement a way to get back from override (probably FAB)
@@ -418,6 +417,9 @@ public class DeviceActivity extends AppCompatActivity {
         fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
 
         inOverride = !inOverride;
+
+        TextView currentOperationOverride = findViewById(R.id.current_status);
+        currentOperationOverride.setText(currentOp);
     }
 
     public void closeOverride() {
@@ -444,17 +446,23 @@ public class DeviceActivity extends AppCompatActivity {
     }
     //endregion
 
-    //TODO: Remove
-    //region Move lines
+    //region Override
     public void forward(View view) {
-        NumberPicker picker = findViewById(R.id.line_count);
-        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, Integer.toString(picker.getValue()));
+        EditText numberOfLines = findViewById(R.id.number_of_lines);
+        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, numberOfLines.getText().toString());
     }
 
     public void back(View view) {
+        EditText numberOfLines = findViewById(R.id.number_of_lines);
+        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, numberOfLines.getText().toString());
+    }
 
-        NumberPicker picker = findViewById(R.id.line_count);
-        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, Integer.toString(-picker.getValue()));
+    public void resume(View view) {
+        mService.write(RobotCommand.OUT_COMMAND_RESUME_SCHEDULE);
+    }
+
+    public void shutdown(View view) {
+        mService.write(RobotCommand.OUT_COMMAND_SHUTDOWN);
     }
     //endregion
 }
