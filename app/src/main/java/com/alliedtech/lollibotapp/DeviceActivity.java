@@ -60,6 +60,7 @@ public class DeviceActivity extends AppCompatActivity {
     private boolean addingDayToSchedule = false;
     private boolean inOverride = false;
     private final Handler timeHandler = new Handler();
+    private int lastBatteryReading = 100;
     //endregion
 
     //region On start/create/destroy
@@ -439,13 +440,6 @@ public class DeviceActivity extends AppCompatActivity {
     }
     //endregion
 
-    //region Helper methods
-    private int getBatteryPercentage(int reading) {
-        //TODO: Get more accurate reading, especially close to min value
-        return 100*(reading - Constants.MIN_VOLTAGE)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
-    }
-    //endregion
-
     //region Override
     public void forward(View view) {
         EditText numberOfLines = findViewById(R.id.number_of_lines);
@@ -465,4 +459,22 @@ public class DeviceActivity extends AppCompatActivity {
         mService.write(RobotCommand.OUT_COMMAND_SHUTDOWN);
     }
     //endregion
+
+    //region Helper methods
+    private int getBatteryPercentage(int reading) {
+        //TODO: Get more accurate reading, especially close to min value
+        int newBatteryLevel = 100*(reading - Constants.MIN_VOLTAGE)/
+                (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+
+        if (lastBatteryReading > 20 && newBatteryLevel < 20) {
+            // 20% battery dialog
+        } else if (lastBatteryReading > 10 && newBatteryLevel < 10) {
+            // 10% battery dialog
+        }
+
+        lastBatteryReading = newBatteryLevel;
+        return 100*(reading - Constants.MIN_VOLTAGE)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+    }
+    //endregion
+
 }
