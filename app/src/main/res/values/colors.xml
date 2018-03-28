@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="primary">#3F51B5</color>
-    <color name="primary_dark">#303F9F</color>
-    <color name="accent">#FF4081</color>-->
     <!--region Amber-brown -->
     <!--<color name="primary">#FFC107</color>
     <color name="primary_dark">#FFA000</color>
@@ -13,6 +10,7 @@
     <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>-->
     <!--endregion-->
+
     <!--region Orange-dark blue-->
     <!--<color name="primary">#FF9800</color>
     <color name="primary_dark">#F57C00</color>
@@ -23,6 +21,7 @@
     <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>-->
     <!--endregion-->
+
     <!--region Brown-dark orange-->
     <!--<color name="primary">#795548</color>
     <color name="primary_dark">#5D4037</color>
@@ -33,6 +32,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>-->
     <!--endregion-->
+
     <!--region Indigo-dark orange-->
     <!--<color name="primary">#3F51B5</color>
     <color name="primary_dark">#303F9F</color>
@@ -43,6 +43,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>-->
     <!--endregion-->
+
     <!--region Green-blue gray-->
     <!--<color name="primary">#4CAF50</color>
     <color name="primary_dark">#388E3C</color>
@@ -53,6 +54,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>-->
     <!--endregion-->
+
     <!--region Orange-brown-->
     <!--<color name="primary">#FF9800</color>
     <color name="primary_dark">#F57C00</color>
@@ -63,6 +65,7 @@
     <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>-->
     <!--endregion-->
+
     <!--region Amber-grey-->
     <color name="primary">#FFC107</color>
     <color name="primary_dark">#FFA000</color>

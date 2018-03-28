@@ -467,9 +467,15 @@ public class DeviceActivity extends AppCompatActivity {
                 (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
 
         if (lastBatteryReading > 20 && newBatteryLevel < 20) {
-            // 20% battery dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Low battery")
+                    .setMessage("Battery below 20%");
+            builder.show();
         } else if (lastBatteryReading > 10 && newBatteryLevel < 10) {
-            // 10% battery dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                    .setTitle("Low battery")
+                    .setMessage("Battery below 10%");
+            builder.show();
         }
 
         lastBatteryReading = newBatteryLevel;
