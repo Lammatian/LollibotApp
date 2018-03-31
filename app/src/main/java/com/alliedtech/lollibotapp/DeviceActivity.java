@@ -184,7 +184,7 @@ public class DeviceActivity extends AppCompatActivity {
             SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:SS",
                     Locale.ENGLISH);
             mService.write(RobotCommand.OUT_COMMAND_GET_SCHEDULE,
-                    format.format(Calendar.getInstance()));
+                    format.format(Calendar.getInstance().getTime()));
 
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
@@ -403,7 +403,6 @@ public class DeviceActivity extends AppCompatActivity {
 
     //region Override open/close
     public void openOverride(View view) {
-        // TODO: Implement functionality of override methods
         // TODO: Implement a way to get back from override (probably FAB)
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -419,8 +418,9 @@ public class DeviceActivity extends AppCompatActivity {
 
         inOverride = !inOverride;
 
-        TextView currentOperationOverride = findViewById(R.id.current_status);
-        currentOperationOverride.setText(currentOp);
+        // TODO: Implement status changes
+//        TextView currentOperationOverride = findViewById(R.id.current_status);
+//        currentOperationOverride.setText(currentOp);
     }
 
     public void closeOverride() {

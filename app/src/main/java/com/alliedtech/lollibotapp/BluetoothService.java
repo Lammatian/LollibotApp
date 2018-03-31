@@ -79,6 +79,7 @@ public class BluetoothService extends Service {
 
         btReceiver.abortBroadcast();
         btAdapter.disable();
+        unregisterReceiver(btReceiver);
     }
     //endregion
 
