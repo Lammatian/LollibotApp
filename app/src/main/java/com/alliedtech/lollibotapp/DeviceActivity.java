@@ -415,6 +415,9 @@ public class DeviceActivity extends AppCompatActivity {
 
         Log.d("Fab transition", "Transition from + to X");
         fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
+        // TODO: Will this work for clicking?
+        // TODO: Is this needed or am I just fucking dumb?
+        //fabAddDay.bringToFront();
 
         inOverride = !inOverride;
 
@@ -424,14 +427,11 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     public void closeOverride() {
+        appBarLayout.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        appBarLayout.setVisibility(View.GONE);
-        viewPager.setVisibility(View.GONE);
-        overrideFragment = new OverrideFragment();
-        fragmentTransaction.replace(R.id.fragment_container, overrideFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentManager.popBackStack();
 
         Log.d("Fab transition", "Transition from X to +");
         fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
