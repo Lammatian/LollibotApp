@@ -24,4 +24,6 @@
     <string name="status">Status</string>
     <string name="zero">0</string>
     <string name="no_of_lines">Number of lines</string>
+    <string name="infinity">∞</string>
+    <string name="lifetime">%1$s hour(s) %2$s minute(s)</string>
 </resources>

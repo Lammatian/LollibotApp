@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.stream.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +62,14 @@ public class DeviceActivity extends AppCompatActivity {
     private boolean inOverride = false;
     private final Handler timeHandler = new Handler();
     private int lastBatteryReading = 100;
+    private int[] batteryReadings = new int[5];
+    private int[] times = {0,
+            Constants.BATTERY_UPDATE_PERIOD / 1000,
+            Constants.BATTERY_UPDATE_PERIOD * 2 / 1000,
+            Constants.BATTERY_UPDATE_PERIOD * 3 / 1000,
+            Constants.BATTERY_UPDATE_PERIOD * 4 / 1000,
+            Constants.BATTERY_UPDATE_PERIOD * 5 / 1000};
+    private int batteryReadingCount = 0;
     //endregion
 
     //region On start/create/destroy
@@ -180,7 +189,6 @@ public class DeviceActivity extends AppCompatActivity {
             mService = mLocalBinder.getServerInstance();
             mService.setHandler(mHandler);
             // Send current date to EV3
-            // TODO: Change on EV3 to accept date on gsc command
             SimpleDateFormat format = new SimpleDateFormat("dd MMM yyyy HH:mm:SS",
                     Locale.ENGLISH);
             mService.write(RobotCommand.OUT_COMMAND_GET_SCHEDULE,
@@ -322,12 +330,13 @@ public class DeviceActivity extends AppCompatActivity {
         fabAddDay.setUpDrawables(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!addingDayToSchedule)
-                    openDailySchedule(-1);
-                else if (!inOverride)
-                    closeDailySchedule();
-                else
+                Log.d("Device activity", "Fab pressed");
+                if (inOverride)
                     closeOverride();
+                else if (!addingDayToSchedule)
+                    openDailySchedule(-1);
+                else
+                    closeDailySchedule();
             }
         });
     }
@@ -403,7 +412,6 @@ public class DeviceActivity extends AppCompatActivity {
 
     //region Override open/close
     public void openOverride(View view) {
-        // TODO: Implement a way to get back from override (probably FAB)
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         appBarLayout.setVisibility(View.GONE);
@@ -415,9 +423,7 @@ public class DeviceActivity extends AppCompatActivity {
 
         Log.d("Fab transition", "Transition from + to X");
         fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
-        // TODO: Will this work for clicking?
-        // TODO: Is this needed or am I just fucking dumb?
-        //fabAddDay.bringToFront();
+        fabAddDay.setVisibility(View.VISIBLE);
 
         inOverride = !inOverride;
 
@@ -435,6 +441,7 @@ public class DeviceActivity extends AppCompatActivity {
 
         Log.d("Fab transition", "Transition from X to +");
         fabAddDay.transition(R.drawable.ic_add_custom, FabState.ADD);
+        fabAddDay.setVisibility(View.GONE);
 
         inOverride = !inOverride;
     }
@@ -462,7 +469,6 @@ public class DeviceActivity extends AppCompatActivity {
 
     //region Helper methods
     private int getBatteryPercentage(int reading) {
-        //TODO: Get more accurate reading, especially close to min value
         int newBatteryLevel = 100*(reading - Constants.MIN_VOLTAGE)/
                 (Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
 
@@ -479,7 +485,55 @@ public class DeviceActivity extends AppCompatActivity {
         }
 
         lastBatteryReading = newBatteryLevel;
+
+        System.arraycopy(batteryReadings, 0, batteryReadings, 1, 4);
+
+        batteryReadings[0] = newBatteryLevel;
+        batteryReadingCount = Math.min(batteryReadingCount + 1, 5);
+
+        if (batteryReadingCount > 1)
+            estimateLifetime();
+
         return 100*(reading - Constants.MIN_VOLTAGE)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
+    }
+
+    public void estimateLifetime() {
+        long cov_xy = 0;
+        long var_x = 0;
+        double mean_x = 0, mean_y = 0;
+
+        for (int i = 0; i < batteryReadingCount; ++i) {
+            mean_x += times[i];
+            mean_y += batteryReadings[i];
+        }
+
+        mean_x /= times.length;
+        mean_y /= batteryReadings.length;
+
+        for (int i = 0; i < batteryReadingCount; ++i) {
+            cov_xy += (times[i] - mean_x) * (batteryReadings[i] - mean_y);
+            var_x += (times[i] - mean_x) * (times[i] - mean_x);
+        }
+
+        double a = cov_xy / (double)var_x;
+        double b = mean_y - a * mean_x;
+
+        double x = (Constants.MIN_VOLTAGE - b) / a;
+
+        Log.d("Device Activity", "Estimated lifetime " + Double.toString(x));
+
+        TextView lifetime = findViewById(R.id.estimated_lifetime);
+
+        if (x <= 0) {
+            lifetime.setText(getString(R.string.infinity));
+        } else {
+            int hours = (int)x / 3600;
+            int minutes = ((int)x % 3600) / 60;
+
+            lifetime.setText(getString(R.string.lifetime,
+                    Integer.toString(hours),
+                    Integer.toString(minutes)));
+        }
     }
     //endregion
 

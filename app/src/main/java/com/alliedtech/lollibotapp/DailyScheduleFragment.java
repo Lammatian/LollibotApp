@@ -78,7 +78,6 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
         addRunButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: This looks ugly
                 if (addDateButton.getText() == getString(R.string.set_date)) {
                     alertDialog("Date not chosen",
                             "Please choose date for this schedule");
@@ -92,7 +91,6 @@ public class DailyScheduleFragment extends Fragment implements DatePickerDialog.
                     calendar.setTime(new Date());
                     runs.add(new Run(null, null));
                     dailyScheduleRecyclerAdapter.notifyDataSetChanged();
-                    // TODO: This could probably be done nicely in a systematic way
                     Log.d("Fab transition", "Transition from ? to X");
                     fabAddDay.transition(R.drawable.ic_close_custom, FabState.CLOSE);
                 }
