@@ -362,6 +362,15 @@ public class DeviceActivity extends AppCompatActivity {
                     closeDailySchedule();
             }
         });
+
+        fabAddDay.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mService.disconnect();
+                startActivity(new Intent(getApplicationContext(), DevicesListActivity.class));
+                return true;
+            }
+        });
     }
 
     private void setUpTabLayout(TabLayout tabLayout) {

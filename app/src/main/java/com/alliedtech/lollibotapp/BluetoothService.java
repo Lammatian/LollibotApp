@@ -217,6 +217,12 @@ public class BluetoothService extends Service {
     }
     //endregion
 
+    //region Disconnecting
+    public void disconnect() {
+        mConnectedThread.cancel();
+    }
+    //endregion
+
     //region Connect thread
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
