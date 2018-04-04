@@ -486,13 +486,22 @@ public class DeviceActivity extends AppCompatActivity {
 
         lastBatteryReading = newBatteryLevel;
 
-        System.arraycopy(batteryReadings, 0, batteryReadings, 1, 4);
+//        System.arraycopy(batteryReadings, 1, batteryReadings, 0, batteryReadingCount);
+//
+//        batteryReadingCount = Math.min(batteryReadingCount + 1, 5);
+//        batteryReadings[batteryReadingCount] = newBatteryLevel;
 
-        batteryReadings[0] = newBatteryLevel;
-        batteryReadingCount = Math.min(batteryReadingCount + 1, 5);
+        int estimatedLifetime = (504 * newBatteryLevel);
+        int hours = estimatedLifetime / 3600;
+        int minutes = (estimatedLifetime % 3600) / 60;
 
-        if (batteryReadingCount > 1)
-            estimateLifetime();
+        TextView lifetime = findViewById(R.id.estimated_lifetime);
+        lifetime.setText(getString(R.string.lifetime,
+                Integer.toString(hours),
+                Integer.toString(minutes)));
+
+//        if (batteryReadingCount > 1)
+//            estimateLifetime();
 
         return 100*(reading - Constants.MIN_VOLTAGE)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
     }
@@ -518,7 +527,7 @@ public class DeviceActivity extends AppCompatActivity {
         double a = cov_xy / (double)var_x;
         double b = mean_y - a * mean_x;
 
-        double x = (Constants.MIN_VOLTAGE - b) / a;
+        double x = -b / a;
 
         Log.d("Device Activity", "Estimated lifetime " + Double.toString(x));
 
