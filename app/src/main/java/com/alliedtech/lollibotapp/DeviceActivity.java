@@ -25,11 +25,11 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import java.util.stream.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -70,6 +70,7 @@ public class DeviceActivity extends AppCompatActivity {
             Constants.BATTERY_UPDATE_PERIOD * 4 / 1000,
             Constants.BATTERY_UPDATE_PERIOD * 5 / 1000};
     private int batteryReadingCount = 0;
+    private SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
     //endregion
 
     //region On start/create/destroy
@@ -78,7 +79,14 @@ public class DeviceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
 
-        allSchedules = new TreeMap<>();
+        Comparator<Date> comp = new Comparator<Date>() {
+            @Override
+            public int compare(Date s1, Date s2) {
+                return dayFormat.format(s1).compareTo(dayFormat.format(s2));
+            }
+        };
+
+        allSchedules = new TreeMap<>(comp);
 
         appBarLayout = findViewById(R.id.appBarLayout);
 
@@ -150,7 +158,22 @@ public class DeviceActivity extends AppCompatActivity {
             case RobotCommand.IN_COMMAND_SCHEDULE_START:
                 break;
             case RobotCommand.IN_COMMAND_SCHEDULE_DAY:
-                allSchedules.put(new DaySchedule(argument).getDate(), new DaySchedule(argument));
+                DaySchedule daySchedule = new DaySchedule(argument);
+                allSchedules.put(daySchedule.getDate(), daySchedule);
+
+                // Update information about today's schedule if necessary
+                Calendar today = Calendar.getInstance();
+
+                if (dayFormat.format(daySchedule.getDate()).equals(
+                        dayFormat.format(today.getTime()))) {
+                    TextView todayItems = findViewById(R.id.todayScheduledItems);
+                    todayItems.setText((daySchedule.size() == 1) ?
+                            getString(R.string.schedule_items_text_singular,
+                                    "1") :
+                            getString(R.string.schedule_items_text_plural,
+                                    Integer.toString(daySchedule.size())));
+                }
+
                 break;
             case RobotCommand.IN_COMMAND_SCHEDULE_END:
                 Toast.makeText(DeviceActivity.this,
@@ -392,9 +415,24 @@ public class DeviceActivity extends AppCompatActivity {
 
     private void closeDailySchedule() {
         if (dayScheduleFragment.isReady()) {
-            allSchedules.put(dayScheduleFragment.getSchedule().getDate(), dayScheduleFragment.getSchedule());
+            allSchedules.put(dayScheduleFragment.getSchedule().getDate(),
+                    dayScheduleFragment.getSchedule());
             scheduleFragment.notifyDateSetChanged();
-            mService.write(RobotCommand.OUT_COMMAND_UPDATE_SCHEDULE, dayScheduleFragment.getSchedule().toString());
+            mService.write(RobotCommand.OUT_COMMAND_UPDATE_SCHEDULE,
+                    dayScheduleFragment.getSchedule().toString());
+
+            // Update today's number if necessary
+            Calendar today = Calendar.getInstance();
+
+            if (dayFormat.format(dayScheduleFragment.getSchedule().getDate()).equals(
+                    dayFormat.format(today.getTime()))) {
+                TextView todayItems = findViewById(R.id.todayScheduledItems);
+                todayItems.setText((dayScheduleFragment.getSchedule().size() == 1) ?
+                        getString(R.string.schedule_items_text_singular,
+                                "1") :
+                        getString(R.string.schedule_items_text_plural,
+                                Integer.toString(dayScheduleFragment.getSchedule().size())));
+            }
         }
 
         appBarLayout.setVisibility(View.VISIBLE);
@@ -455,7 +493,8 @@ public class DeviceActivity extends AppCompatActivity {
 
     public void back(View view) {
         EditText numberOfLines = findViewById(R.id.number_of_lines);
-        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES, numberOfLines.getText().toString());
+        mService.write(RobotCommand.OUT_COMMAND_MOVE_LINES,
+                "-" + numberOfLines.getText().toString());
     }
 
     public void resume(View view) {
@@ -486,22 +525,23 @@ public class DeviceActivity extends AppCompatActivity {
 
         lastBatteryReading = newBatteryLevel;
 
-//        System.arraycopy(batteryReadings, 1, batteryReadings, 0, batteryReadingCount);
+        System.arraycopy(batteryReadings, 1, batteryReadings, 0,
+                Math.max(batteryReadingCount - 1, 0));
+
+        batteryReadingCount = Math.min(batteryReadingCount + 1, 5);
+        batteryReadings[batteryReadingCount - 1] = newBatteryLevel;
+
+//        int estimatedLifetime = (504 * newBatteryLevel);
+//        int hours = estimatedLifetime / 3600;
+//        int minutes = (estimatedLifetime % 3600) / 60;
 //
-//        batteryReadingCount = Math.min(batteryReadingCount + 1, 5);
-//        batteryReadings[batteryReadingCount] = newBatteryLevel;
+//        TextView lifetime = findViewById(R.id.estimated_lifetime);
+//        lifetime.setText(getString(R.string.lifetime,
+//                Integer.toString(hours),
+//                Integer.toString(minutes)));
 
-        int estimatedLifetime = (504 * newBatteryLevel);
-        int hours = estimatedLifetime / 3600;
-        int minutes = (estimatedLifetime % 3600) / 60;
-
-        TextView lifetime = findViewById(R.id.estimated_lifetime);
-        lifetime.setText(getString(R.string.lifetime,
-                Integer.toString(hours),
-                Integer.toString(minutes)));
-
-//        if (batteryReadingCount > 1)
-//            estimateLifetime();
+        if (batteryReadingCount > 1)
+            estimateLifetime();
 
         return 100*(reading - Constants.MIN_VOLTAGE)/(Constants.MAX_VOLTAGE - Constants.MIN_VOLTAGE);
     }
@@ -533,7 +573,7 @@ public class DeviceActivity extends AppCompatActivity {
 
         TextView lifetime = findViewById(R.id.estimated_lifetime);
 
-        if (x <= 0) {
+        if (x <= 0 || x > 3600000) {
             lifetime.setText(getString(R.string.infinity));
         } else {
             int hours = (int)x / 3600;
@@ -545,5 +585,4 @@ public class DeviceActivity extends AppCompatActivity {
         }
     }
     //endregion
-
 }
