@@ -24,4 +24,5 @@ public interface Constants {
     int MIN_VOLTAGE = 6600000;
     int BATTERY_UPDATE_PERIOD = 30*1000;
     int BATTERY_UPDATE_DELAY = 5*1000;
+    int BATTERY_BACKLOG = 20;
 }

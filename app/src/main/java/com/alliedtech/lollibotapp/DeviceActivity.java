@@ -62,13 +62,8 @@ public class DeviceActivity extends AppCompatActivity {
     private boolean inOverride = false;
     private final Handler timeHandler = new Handler();
     private int lastBatteryReading = 100;
-    private int[] batteryReadings = new int[5];
-    private int[] times = {0,
-            Constants.BATTERY_UPDATE_PERIOD / 1000,
-            Constants.BATTERY_UPDATE_PERIOD * 2 / 1000,
-            Constants.BATTERY_UPDATE_PERIOD * 3 / 1000,
-            Constants.BATTERY_UPDATE_PERIOD * 4 / 1000,
-            Constants.BATTERY_UPDATE_PERIOD * 5 / 1000};
+    private int[] batteryReadings = new int[Constants.BATTERY_BACKLOG];
+    private int[] times = new int[Constants.BATTERY_BACKLOG];
     private int batteryReadingCount = 0;
     private SimpleDateFormat dayFormat = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
     //endregion
@@ -78,6 +73,10 @@ public class DeviceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device);
+
+        for (int i = Constants.BATTERY_BACKLOG - 1; i >= 0; --i) {
+            times[19 - i] = -Constants.BATTERY_UPDATE_PERIOD * i / 1000;
+        }
 
         Comparator<Date> comp = new Comparator<Date>() {
             @Override
@@ -537,7 +536,7 @@ public class DeviceActivity extends AppCompatActivity {
         System.arraycopy(batteryReadings, 1, batteryReadings, 0,
                 Math.max(batteryReadingCount - 1, 0));
 
-        batteryReadingCount = Math.min(batteryReadingCount + 1, 5);
+        batteryReadingCount = Math.min(batteryReadingCount + 1, Constants.BATTERY_BACKLOG);
         batteryReadings[batteryReadingCount - 1] = newBatteryLevel;
 
 //        int estimatedLifetime = (504 * newBatteryLevel);

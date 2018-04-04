@@ -21,7 +21,7 @@
     <string name="back">Back</string>
     <string name="resume_schedule">Resume schedule</string>
     <string name="shutdown">Shutdown</string>
-    <string name="status">Status</string>
+    <string name="status">Override</string>
     <string name="zero">0</string>
     <string name="no_of_lines">Number of lines</string>
     <string name="infinity">∞</string>
